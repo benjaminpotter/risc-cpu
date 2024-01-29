@@ -1,49 +1,50 @@
-`timescale 1ns/10ps
+`timescale 1ns/1ps
+`include "datapath.v"
+
 module datapath_tb();
-reg clock, clear, RZout, RAout, RBout, RAin, RBin, RZin;
-reg [7:0] AddImmediate;
-reg [7:0] RegisterAImmediate;
+	reg clock, clear;
+	reg [15:0] register_select;
+	reg [31:0] register_set;
+	reg [3:0] op_select;
 
-reg [3:0] present_state;
+	datapath DP(
+		clock, clear,
+		op_select,
+		register_select,
+		register_set
+	);
+				
+	initial begin 
+		$dumpfile("datapath_tb.vcd");
+		$dumpvars(0, datapath_tb);
 
-datapath DP(
-	clock, clear,
-	AddImmediate,
-	RegisterAImmediate,
-	RZout, RAout, RBout,
-	RAin, RBin, RZin
-);
+		clock = 0; 
+		#10
 
-parameter init = 4'd1, T0 = 4'd2, T1 = 4'd3, T2 = 4'd4;
-			 
-initial begin clock = 0; present_state = 4'd0; end
-always #10 clock = ~clock;
-always @ (negedge clock) present_state = present_state + 1;
-	
-always @(present_state) begin
-	case(present_state)
-		init: begin
-			clear <= 1;
-			AddImmediate <= 8'h00; RegisterAImmediate <= 8'h00;
-			RZout <= 0; RAout <= 0; RBout <= 0; RAin <= 0; RBin <= 0; RZin <= 0;
-			#15 clear <= 0;
-		end
-		// ldi A, 5
-		T0: begin
-			RegisterAImmediate <= 8'b101; RAin <= 1;
-			#15 RegisterAImmediate <= 8'h00; RAin <= 0;
-		end
-	// addi B, A, 5 - 2 steps
-		// add value in register A and immediate 5 and then save in Z
-		T1: begin
-			RAout <= 1; AddImmediate <= 8'h5; RZin <= 1;
-			#15 RAout <= 0; RZin <= 0;
-		end
-		// mv B, Z - move value in Z to B
-		T2: begin
-			RZout <= 1; RBin <= 1;
-			#15 RZout <= 0; RBin <= 0;
-		end
-	endcase
-end
+		register_select = 16'b0000000000000001;
+		register_set = 5;
+		#10
+		clock = 1;
+		#10
+		clock = 0;
+		#10
+
+		register_select = 16'b0000000000000010;
+		register_set = 1;
+		#10
+		clock = 1;
+		#10
+		clock = 0;
+		#10
+
+		op_select = 4'b0011;
+		#10
+		clock = 1;
+		#10
+		clock = 0;
+		#10
+
+		$display("sim complete");
+		$finish;
+	end
 endmodule
