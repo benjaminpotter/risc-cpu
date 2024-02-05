@@ -1,0 +1,56 @@
+alu: ALU {
+
+    adder: {
+
+    }
+
+    multiplier: {
+
+    }
+    
+    divider: {
+
+    }
+    
+    shifter: {
+
+    }
+    
+    and: {
+
+    }
+    
+    or: {
+
+    }
+    
+    not: {
+
+    }
+    
+    neg: {
+
+    }
+    
+}
+
+y: Register Y {
+
+}
+
+z: Register Z {
+
+}
+
+control: Control Signals {
+
+    op_select: {
+
+    }
+
+}
+
+control.op_select -> alu
+
+y -> alu
+alu -> z

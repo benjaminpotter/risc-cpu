@@ -26,6 +26,12 @@
 # *.vhd
 # *.v
 
+# Ignore generated files
+*.svg
+*.vcd
+*.vvp
+*.out
+
 # ignore Quartus II generated files
 *_generation_script*
 *_inst.vhd
