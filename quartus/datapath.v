@@ -4,45 +4,66 @@
 
 module datapath(
 	input wire clock, clear,
-	input wire [3:0] op_select,
-	input wire [15:0] register_select,
-	input wire [31:0] register_in
+
+	// control register signals
+	input wire pci, pco,
+	input wire iri, iro,
+
+	input wire [31:0] pc, pc_immediate,
+	input wire [31:0] ir, ir_immediate,
+
+	// memory register signals
+	input wire mari, maro,
+	input wire mdri, mdro,
+
+	// 64 bit register signals
+	input wire hii, hio,
+	input wire loi, loo,
+
+	// register file signals
+	input wire r0i, r0o,
+	input wire r1i, r1o
+
 );
 
-wire pc_enable, ir_enable;
-wire [31:0] pc_data, ir_data;
+wire [31:0] busi_pc, busi_ir;
+wire [31:0] busi_r0, busi_r1;
 
-wire [31:0] ra_data, rb_data;
+wire [31:0] buso;
 
-wire mar_enable, mdr_enable;
-wire [31:0] mar_data, mdr_data;
+// control registers
+register rpc(clear, clock, pci, pc_immediate, busi_pc);
+register rir(clear, clock, iri, ir_immediate, busi_ir);
 
-wire input_port_enable, output_port_enable;
-wire [31:0] input_port_data, output_port_data;
+// // memory registers
+// register mar();
+// register mdr();
 
-wire [63:0] rz_data_in, rz_data_out;
+// // 64 bit register
+// register hi();
+// register lo();
 
-// control
-register pc(clear, clock, pc_enable, register_in, pc_data);
-register ir(clear, clock, ir_enable, register_in, ir_data);
+// // register file
+register r0(clear, clock, r0i, buso, busi_r0);
+register r1(clear, clock, r1i, buso, busi_r1);
 
-// register file
-register ra(clear, clock, register_select[0], register_in, ra_data);
-register rb(clear, clock, register_select[1], register_in, rb_data);
+// bus
+bus b(
+	.busi_pc(busi_pc),
+	.busi_ir(busi_ir),
+	.busi_r0(busi_r0),
 
-// memory interface
-register mar(clear, clock, mar_enable, register_in, mar_data);
-register mdr(clear, clock, mdr_enable, register_in, mdr_data);
+	.pco(pco),
+	.iro(iro),
+	
+	.r0o(r0o),
 
-// io interface
-register input_port(clear, clock, input_port_enable, register_in, input_port_data);
-register output_port(clear, clock, output_port_enable, register_in, output_port_data);
+	.buso(buso)
+);
 
-register rz_lo(clear, clock, register_select[2], rz_data_in[31:0], rz_data_out[31:0]);
-register rz_hi(clear, clock, register_select[2], rz_data_in[63:32], rz_data_out[63:32]);
 
-// alu
-alu ALU(op_select, ra_data, rb_data, rz_data_in);
+
+
 
 
 endmodule
