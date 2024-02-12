@@ -11,6 +11,10 @@ module datapath_tb();
 	reg [31:0] pc, pc_immediate;
 	reg [31:0] ir, ir_immediate;
 
+	reg mari, maro;
+	reg mdri, mdro;
+	reg [31:0] mar_immediate, mdr_immediate;
+
 	reg r0i, r0o;
 	reg r1i, r1o;
 
@@ -44,6 +48,12 @@ module datapath_tb();
 
 		.ir(ir),
 		.ir_immediate(ir_immediate),
+
+		.mari(mari), .maro(maro),
+		.mdri(mdri), .mdro(mdro),
+
+		.mar_immediate(mar_immediate),
+		.mdr_immediate(mdr_immediate),
 
 		.r0i(r0i), .r0o(r0o),
 		.r1i(r1i), .r1o(r1o)
@@ -93,14 +103,27 @@ module datapath_tb();
 		iri <= 0;
 		iro <= 0;
 
+		mari <= 0;
+		mdri <= 0;
+
+		maro <= 0;
+		mdro <= 0;
+
+
 		pc <= 0;
 		pc_immediate <= 0;
 
 		ir <= 0;
 		ir_immediate <= 0;
 
+		mar_immediate <= 0;
+		mdr_immediate <= 0;
+
 		r0i <= 0;
 		r0o <= 0;
+
+		r1i <= 0;
+		r1o <= 0;
 	end
 	Reg_load1a: begin
 		// Mdatain <= 32'h00000012;
@@ -108,14 +131,17 @@ module datapath_tb();
 		// #10 Read <= 1; MDRin <= 1;
 		// #15 Read <= 0; MDRin <= 0;
 
-		pc_immediate <= 32'h0000_0005;
-		#10 pci <= 1;
-		#15 pci <= 0;
+		mdr_immediate <= 32'h0000_0005;
+		#10 mdri <= 1;
+		#10 mdri <= 0;
 
 	end
 	Reg_load1b: begin
 		// #10 MDRout <= 1; R2in <= 1;
 		// #15 MDRout <= 0; R2in <= 0; // initialize R2 with the value $12
+
+		#10 mdro <= 1; r0i <= 1;
+		#10 mdro <= 0; r0i <= 0;
 		
 
 	end
@@ -124,14 +150,18 @@ module datapath_tb();
 		// #10 Read <= 1; MDRin <= 1;
 		// #15 Read <= 0; MDRin <= 0;
 
-		#10 pco <= 1; r0i <= 1;
-		#15 pco <= 0; r0i <= 0;
+		mdr_immediate <= 32'h0000_0006;
+		#10 mdri <= 1;
+		#10 mdri <= 0;
 
-		
 	end
 	Reg_load2b: begin
 		// #10 MDRout <= 1; R3in <= 1;
 		// #15 MDRout <= 0; R3in <= 0; // initialize R3 with the value $14
+
+		#10 mdro <= 1; r1i <= 1;
+		#10 mdro <= 0; r1i <= 0;
+
 	end
 	Reg_load3a: begin
 		// Mdatain <= 32'h00000018;

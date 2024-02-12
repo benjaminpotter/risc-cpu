@@ -16,6 +16,9 @@ module datapath(
 	input wire mari, maro,
 	input wire mdri, mdro,
 
+	input wire [31:0] mar_immediate,
+	input wire [31:0] mdr_immediate,
+
 	// 64 bit register signals
 	input wire hii, hio,
 	input wire loi, loo,
@@ -27,6 +30,7 @@ module datapath(
 );
 
 wire [31:0] busi_pc, busi_ir;
+wire [31:0] busi_mar, busi_mdr;
 wire [31:0] busi_r0, busi_r1;
 
 wire [31:0] buso;
@@ -35,9 +39,9 @@ wire [31:0] buso;
 register rpc(clear, clock, pci, pc_immediate, busi_pc);
 register rir(clear, clock, iri, ir_immediate, busi_ir);
 
-// // memory registers
-// register mar();
-// register mdr();
+// memory registers
+register mar(clear, clock, mari, mar_immediate, busi_mar);
+register mdr(clear, clock, mdri, mdr_immediate, busi_mdr);
 
 // // 64 bit register
 // register hi();
@@ -52,9 +56,13 @@ bus b(
 	.busi_pc(busi_pc),
 	.busi_ir(busi_ir),
 	.busi_r0(busi_r0),
+	.busi_mar(busi_mar),
+	.busi_mdr(busi_mdr),
 
 	.pco(pco),
 	.iro(iro),
+	.maro(maro),
+	.mdro(mdro),
 	
 	.r0o(r0o),
 
