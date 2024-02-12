@@ -2,7 +2,7 @@ module division(
     input [31:0] Q,
     input [31:0] M,
     output reg [31:0] Quo,
-    output reg [32:0] R
+    output reg [31:0] R
 );
 
 	reg [32:0] extended_M;
@@ -35,7 +35,7 @@ module division(
 			end
 		end
 		Quo = A[31:0];
-		R = A[64:32];
+		R = A[63:32];
 	end
 
 endmodule
