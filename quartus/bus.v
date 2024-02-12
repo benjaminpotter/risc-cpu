@@ -7,11 +7,13 @@ module bus (
 	input wire [31:0] busi_mar,
 	input wire [31:0] busi_mdr,
 	input wire [31:0] busi_r0,
+	input wire [31:0] busi_r1,
 
 	// encoder
 	input wire pco, iro,
 	input wire maro, mdro,
 	input wire r0o,
+	input wire r1o,
 
 	// output
 	output wire [31:0] buso
@@ -27,6 +29,7 @@ module bus (
 		if(mdro) q = busi_mdr;
 
 		if(r0o) q = busi_r0;
+		if(r1o) q = busi_r1;
 	end
 
 	assign buso = q;
