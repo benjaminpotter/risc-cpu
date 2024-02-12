@@ -61,7 +61,9 @@ bus b(
 	.buso(buso)
 );
 
+input wire [4:0] op_select = buso[31:27];
 
+alu ALU(op_select, a, b, result); //fill in last 3 parameters after
 
 
 
