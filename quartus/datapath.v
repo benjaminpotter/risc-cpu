@@ -23,6 +23,10 @@ module datapath(
 	input wire hii, hio,
 	input wire loi, loo,
 
+	// alu register signals
+	input wire ryi, ryo,
+	input wire rzi, rzo,
+
 	// register file signals
 	input wire r0i, r0o,
 	input wire r1i, r1o
@@ -31,9 +35,14 @@ module datapath(
 
 wire [31:0] busi_pc, busi_ir;
 wire [31:0] busi_mar, busi_mdr;
+wire [31:0] busi_rz_hi, busi_rz_lo;
 wire [31:0] busi_r0, busi_r1;
 
 wire [31:0] buso;
+
+wire [31:0] alua;
+wire [31:0] alub;
+wire [63:0] aluo;
 
 // control registers
 register rpc(clear, clock, pci, pc_immediate, busi_pc);
@@ -47,6 +56,11 @@ register mdr(clear, clock, mdri, mdr_immediate, busi_mdr);
 // register hi();
 // register lo();
 
+// alu registers
+register ry(clear, clock, ryi, buso, alua);
+register rz_hi(clear, clock, rzi, aluo[63:32], busi_rz_hi);
+register rz_lo(clear, clock, rzi, aluo[31:0], busi_rz_lo);
+
 // // register file
 register r0(clear, clock, r0i, buso, busi_r0);
 register r1(clear, clock, r1i, buso, busi_r1);
@@ -56,6 +70,7 @@ bus b(
 	.busi_pc(busi_pc),
 	.busi_ir(busi_ir),
 	.busi_r0(busi_r0),
+	.busi_r1(busi_r1),
 	.busi_mar(busi_mar),
 	.busi_mdr(busi_mdr),
 
@@ -65,13 +80,16 @@ bus b(
 	.mdro(mdro),
 	
 	.r0o(r0o),
+	.r1o(r1o),
 
 	.buso(buso)
 );
 
-input wire [4:0] op_select = buso[31:27];
+input wire [4:0] op_select;
+assign op_select = 5'b00011;
+assign alub = buso;
 
-alu ALU(op_select, a, b, result); //fill in last 3 parameters after
+alu ALU(op_select, alua, alub, aluo); //fill in last 3 parameters after
 
 
 

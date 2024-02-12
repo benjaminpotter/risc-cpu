@@ -15,6 +15,8 @@ module datapath_tb();
 	reg mdri, mdro;
 	reg [31:0] mar_immediate, mdr_immediate;
 
+	reg ryi, ryo;
+
 	reg r0i, r0o;
 	reg r1i, r1o;
 
@@ -54,6 +56,9 @@ module datapath_tb();
 
 		.mar_immediate(mar_immediate),
 		.mdr_immediate(mdr_immediate),
+
+		.ryi(ryi),
+		.ryo(ryo),
 
 		.r0i(r0i), .r0o(r0o),
 		.r1i(r1i), .r1o(r1o)
@@ -119,6 +124,9 @@ module datapath_tb();
 		mar_immediate <= 0;
 		mdr_immediate <= 0;
 
+		ryi <= 0;
+		ryo <= 0;
+
 		r0i <= 0;
 		r0o <= 0;
 
@@ -167,13 +175,18 @@ module datapath_tb();
 		// Mdatain <= 32'h00000018;
 		// #10 Read <= 1; MDRin <= 1;
 		// #15 Read <= 0; MDRin <= 0;
+
+		#10 r0o <= 1; ryi <= 1;
+		#10 r0o <= 0; ryi <= 0;
 	end
 	Reg_load3b: begin
 		// #10 MDRout <= 1; R1in <= 1;
 		// #15 MDRout <= 0; R1in <= 0; // initialize R1 with the value $18
+		#10 r1o <= 1;
 	end
 	T0: begin // see if you need to de-assert these signals
 		// PCout <= 1; MARin <= 1; IncPC <= 1; Zin <= 1;
+		
 	end
 	T1: begin
 		// Zlowout <= 1; PCin <= 1; Read <= 1; MDRin <= 1;
