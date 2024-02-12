@@ -1,9 +1,8 @@
 module division_tb;
     reg [31:0] Q, M;
     wire [31:0] Quo;
-    wire [32:0] R;
+    wire [31:0] R;
 
-    // Instantiate the ripple carry adder
     division div (
         Q,
         M,
