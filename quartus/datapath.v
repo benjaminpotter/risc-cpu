@@ -1,6 +1,6 @@
-`include "register.v"
-`include "alu.v"
-`include "bus.v"
+//`include "register.v"
+//`include "alu.v"
+//`include "bus.v"
 
 module datapath(
 	input wire clock, clear,
@@ -85,8 +85,8 @@ bus b(
 	.buso(buso)
 );
 
-input wire [4:0] op_select;
-assign op_select = 5'b00011;
+wire [4:0] op_select;
+assign op_select = 5'b00011; //hardcode opcode here
 assign alub = buso;
 
 alu ALU(op_select, alua, alub, aluo); //fill in last 3 parameters after
