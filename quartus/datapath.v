@@ -1,6 +1,6 @@
-//`include "register.v"
-//`include "alu.v"
-//`include "bus.v"
+`include "register.v"
+`include "alu.v"
+`include "bus.v"
 
 module datapath(
 	input wire clock, clear,
@@ -40,13 +40,14 @@ wire [31:0] busi_r0, busi_r1;
 
 wire [31:0] buso;
 
+wire [4:0] op_select;
 wire [31:0] alua;
 wire [31:0] alub;
 wire [63:0] aluo;
 
 // control registers
 register rpc(clear, clock, pci, pc_immediate, busi_pc);
-register rir(clear, clock, iri, ir_immediate, busi_ir);
+register rir(clear, clock, iri, buso, busi_ir);
 
 // memory registers
 register mar(clear, clock, mari, mar_immediate, busi_mar);
@@ -85,8 +86,7 @@ bus b(
 	.buso(buso)
 );
 
-wire [4:0] op_select;
-assign op_select = 5'b00011; //hardcode opcode here
+assign op_select = busi_ir[31:27]; //hardcode opcode here
 assign alub = buso;
 
 alu ALU(op_select, alua, alub, aluo); //fill in last 3 parameters after
