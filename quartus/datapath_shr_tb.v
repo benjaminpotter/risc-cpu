@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 //`include "datapath.v"
 
-module datapath_tb();
+module datapath_shr_tb();
 	reg clock, clear;
 
 	// control register signals
@@ -67,8 +67,8 @@ module datapath_tb();
 	// add test logic here
 	initial
 	begin
-		$dumpfile("datapath.vcd");
-		$dumpvars;
+		//$dumpfile("datapath.vcd");
+		//$dumpvars;
 		clock = 0;
 		forever #10 clock = ~ clock;
 	end
@@ -139,7 +139,7 @@ module datapath_tb();
 		// #10 Read <= 1; MDRin <= 1;
 		// #15 Read <= 0; MDRin <= 0;
 
-		mdr_immediate <= 32'h0000_0005;
+		mdr_immediate <= 32'hf000_0002; // value to be shifted
 		#10 mdri <= 1;
 		#10 mdri <= 0;
 
@@ -158,7 +158,7 @@ module datapath_tb();
 		// #10 Read <= 1; MDRin <= 1;
 		// #15 Read <= 0; MDRin <= 0;
 
-		mdr_immediate <= 32'h0000_0006;
+		mdr_immediate <= 32'h0000_0002; // shift amount
 		#10 mdri <= 1;
 		#10 mdri <= 0;
 
@@ -187,7 +187,7 @@ module datapath_tb();
 		// PCout <= 1; MARin <= 1; IncPC <= 1; Zin <= 1;
 		
 
-		mdr_immediate <= {5'b00011, 27'b0};
+		mdr_immediate <= {5'b00101, 27'b0};
 		#10 mdri <= 1; 
 	    #10 mdri <= 0;	
 		
@@ -218,7 +218,7 @@ module datapath_tb();
 	T5: begin
 		// Zlowout <= 1; R1in <= 1;
 
-		$finish;
+		//$finish;
 	end
 	endcase
 	end

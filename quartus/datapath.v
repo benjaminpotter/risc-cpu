@@ -1,6 +1,6 @@
-`include "register.v"
-`include "alu.v"
-`include "bus.v"
+//`include "register.v"
+//`include "alu.v"
+//`include "bus.v"
 
 module datapath(
 	input wire clock, clear,
