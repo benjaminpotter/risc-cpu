@@ -12,7 +12,7 @@ module division_tb;
 
     initial begin
 
-        Q = 32'h0000_0007; M = 32'h0000_0002;
+        Q = 32'hFFFF_FFF9; M = 32'h0000_0002;
         #100
 
         $finish;
