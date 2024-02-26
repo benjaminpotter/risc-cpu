@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-//`include "datapath.v"
+`include "datapath.v"
 
 module datapath_tb();
 	reg clock, clear;
@@ -176,40 +176,41 @@ module datapath_tb();
 		// #10 Read <= 1; MDRin <= 1;
 		// #15 Read <= 0; MDRin <= 0;
 
-		#10 r0o <= 1; ryi <= 1;
-		#10 r0o <= 0; ryi <= 0;
 	end
 	Reg_load3b: begin
 		// #10 MDRout <= 1; R1in <= 1;
 		// #15 MDRout <= 0; R1in <= 0; // initialize R1 with the value $18
-		#10 r1o <= 1;
-//		#10 r1o <= 0;
+		
+
 	end
 	T0: begin // see if you need to de-assert these signals
 		// PCout <= 1; MARin <= 1; IncPC <= 1; Zin <= 1;
 		
 
-//		mdr_immediate <= {5'b00011, 27'b0};
-//		#10 mdri <= 1; 
-//	   #10 mdri <= 0;	
+		mdr_immediate <= {5'b00011, 27'b0};
+		#10 mdri <= 1; 
+	    #10 mdri <= 0;	
 		
 	end
 	T1: begin
 		// Zlowout <= 1; PCin <= 1; Read <= 1; MDRin <= 1;
 		// Mdatain <= 32'h28918000; // opcode for “and R1, R2, R3”
 		
-//		#10 mdro <= 1; iri <= 1;
-//		#10 mdro <= 0; iri <= 0;
+		#10 mdro <= 1; iri <= 1;
+		#10 mdro <= 0; iri <= 0;
 	end
 	T2: begin
 		// MDRout <= 1; IRin <= 1;
+		#10 r0o <= 1; ryi <= 1;
+		#10 r0o <= 0; ryi <= 0;
 		
-//		#10 iro <= 1;
-//		#10 iro <= 0;
 		
 	end
 	T3: begin
 		// R2out <= 1; Yin <= 1;
+		
+		#10 r1o <= 1; 
+		#10 r1o <= 0;
 	end
 	T4: begin
 		// R3out <= 1; AND <= 1; Zin <= 1;
