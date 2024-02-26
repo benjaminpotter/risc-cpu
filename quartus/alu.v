@@ -44,7 +44,7 @@ module alu (
 	 rotate_right ror(a, b[4:0], ror_out);
 	 rotate_left rol(a, b[4:0], rol_out);
 	 
-	 not_module NOT(a, not_out);	 
+	 not_module NOT(b, not_out);	 
 	 and_module AND(a, b, and_out);
 	 or_module OR(a, b, or_out);	 
     neg negator(b, neg_out);
