@@ -1,15 +1,15 @@
-`include "adder.v"
-`include "neg.v"
-`include "left_shift.v"
-`include "not_module.v"
-`include "or_module.v"
-`include "and_module.v"
-`include "right_shift.v"
-`include "arith_right_shift.v"
-`include "rotate_right.v"
-`include "rotate_left.v"
-`include "booth_mul.v"
-`include "division.v"
+//`include "adder.v"
+//`include "neg.v"
+//`include "left_shift.v"
+//`include "not_module.v"
+//`include "or_module.v"
+//`include "and_module.v"
+//`include "right_shift.v"
+//`include "arith_right_shift.v"
+//`include "rotate_right.v"
+//`include "rotate_left.v"
+//`include "booth_mul.v"
+//`include "division.v"
 
 
 module alu (
@@ -44,7 +44,7 @@ module alu (
 	 rotate_right ror(a, b[4:0], ror_out);
 	 rotate_left rol(a, b[4:0], rol_out);
 	 
-	 not_module NOT(a, not_out);	 
+	 not_module NOT(b, not_out);	 
 	 and_module AND(a, b, and_out);
 	 or_module OR(a, b, or_out);	 
     neg negator(b, neg_out);

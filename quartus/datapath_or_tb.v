@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 //`include "datapath.v"
 
-module datapath_tb();
+module datapath_or_tb();
 	reg clock, clear;
 
 	// control register signals
@@ -96,11 +96,6 @@ module datapath_tb();
 	begin
 	case (Present_state) // assert the required signals in each clock cycle
 	Default: begin
-		// PCout <= 0; Zlowout <= 0; MDRout <= 0; // initialize the signals
-		// R2out <= 0; R3out <= 0; MARin <= 0; Zin <= 0;
-		// PCin <=0; MDRin <= 0; IRin <= 0; Yin <= 0;
-		// IncPC <= 0; Read <= 0; AND <= 0;
-		// R1in <= 0; R2in <= 0; R3in <= 0; Mdatain <= 32'h00000000;
 
 		pci <= 0;
 		pco <= 0;
@@ -134,10 +129,6 @@ module datapath_tb();
 		r1o <= 0;
 	end
 	Reg_load1a: begin
-		// Mdatain <= 32'h00000012;
-		// Read = 0; MDRin = 0; // the first zero is there for completeness
-		// #10 Read <= 1; MDRin <= 1;
-		// #15 Read <= 0; MDRin <= 0;
 
 		mdr_immediate <= 32'h0000_0005;
 		#10 mdri <= 1;
@@ -145,8 +136,6 @@ module datapath_tb();
 
 	end
 	Reg_load1b: begin
-		// #10 MDRout <= 1; R2in <= 1;
-		// #15 MDRout <= 0; R2in <= 0; // initialize R2 with the value $12
 
 		#10 mdro <= 1; r0i <= 1;
 		#10 mdro <= 0; r0i <= 0;
@@ -154,9 +143,6 @@ module datapath_tb();
 
 	end
 	Reg_load2a: begin
-		// Mdatain <= 32'h00000014;
-		// #10 Read <= 1; MDRin <= 1;
-		// #15 Read <= 0; MDRin <= 0;
 
 		mdr_immediate <= 32'h0000_0006;
 		#10 mdri <= 1;
@@ -164,62 +150,49 @@ module datapath_tb();
 
 	end
 	Reg_load2b: begin
-		// #10 MDRout <= 1; R3in <= 1;
-		// #15 MDRout <= 0; R3in <= 0; // initialize R3 with the value $14
 
 		#10 mdro <= 1; r1i <= 1;
 		#10 mdro <= 0; r1i <= 0;
 
 	end
 	Reg_load3a: begin
-		// Mdatain <= 32'h00000018;
-		// #10 Read <= 1; MDRin <= 1;
-		// #15 Read <= 0; MDRin <= 0;
 
 	end
 	Reg_load3b: begin
-		// #10 MDRout <= 1; R1in <= 1;
-		// #15 MDRout <= 0; R1in <= 0; // initialize R1 with the value $18
 		
-
 	end
 	T0: begin // see if you need to de-assert these signals
-		// PCout <= 1; MARin <= 1; IncPC <= 1; Zin <= 1;
-		
 
-		mdr_immediate <= {5'b00011, 27'b0};
+		mdr_immediate <= {5'b01011, 27'b0};
 		#10 mdri <= 1; 
 	    #10 mdri <= 0;	
 		
 	end
 	T1: begin
-		// Zlowout <= 1; PCin <= 1; Read <= 1; MDRin <= 1;
-		// Mdatain <= 32'h28918000; // opcode for “and R1, R2, R3”
 		
 		#10 mdro <= 1; iri <= 1;
 		#10 mdro <= 0; iri <= 0;
 	end
 	T2: begin
-		// MDRout <= 1; IRin <= 1;
+
 		#10 r0o <= 1; ryi <= 1;
 		#10 r0o <= 0; ryi <= 0;
 		
 		
 	end
 	T3: begin
-		// R2out <= 1; Yin <= 1;
-		
+
 		#10 r1o <= 1; 
 		#10 r1o <= 0;
 	end
 	T4: begin
-		// R3out <= 1; AND <= 1; Zin <= 1;
+
 	end
 	T5: begin
-		// Zlowout <= 1; R1in <= 1;
 
 		$finish;
 	end
 	endcase
 	end
 endmodule
+
