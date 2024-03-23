@@ -16,6 +16,10 @@ module datapath(
 	input wire mari, maro,
 	input wire mdri, mdro,
 	
+	// inport and outport signals
+	input wire opi, ipi, ipo,
+	input wire input_unit,
+	
 	// memory and mdr signals
 	input wire mem_read,
 	input wire mem_write,
@@ -33,14 +37,14 @@ module datapath(
 	
 	// select and encode and register file signals
 	input wire gra, grb, grc, rin, rout, baout
-
+	
 );
 
 wire [31:0] busi_pc, busi_ir;
 wire [31:0] memi_mar, busi_mdr; 
 wire [31:0] busi_rz_hi, busi_rz_lo;
 wire [31:0] busi_r0, busi_r1, busi_r2, busi_r3, busi_r4, busi_r5, busi_r6, busi_r7, busi_r8, busi_r9, busi_r10, busi_r11, busi_r12, busi_r13, busi_r14, busi_r15;
-
+wire [31:0] busi_ip;
 wire [31:0] busi_c_sign;
 wire [15:0] R_IN, R_OUT;
 
@@ -60,8 +64,8 @@ register rpc(clear, clock, pci, pc_immediate, busi_pc);
 register rir(clear, clock, iri, buso, busi_ir);
 
 // memory registers
-register mar(clear, clock, mari, buso, memi_mar); // ESES eventually, change mar_immediate to busi_mar FIX
-register mdr(clear, clock, mdri, md_mux_out, busi_mdr); // ESES input should be output of mdr mux, output stays same
+register mar(clear, clock, mari, buso, memi_mar); 
+register mdr(clear, clock, mdri, md_mux_out, busi_mdr);
 
 // select and encode logic
 select_encode_logic sel(busi_ir, gra, grb, grc, rin, rout, baout, R_IN, R_OUT, busi_c_sign); //c sign extend going on bus
@@ -85,6 +89,11 @@ mdMux md_mux(
 register ry(clear, clock, ryi, buso, alua);
 register rz_hi(clear, clock, rzi, aluo[63:32], busi_rz_hi);
 register rz_lo(clear, clock, rzi, aluo[31:0], busi_rz_lo);
+
+// input and output ports
+wire [31:0] output_unit;
+register outport(clear, clock, opi, buso, output_unit);
+register inport(clear, clock, ipi, input_unit, busi_ip);
 
 // register file
 // set r0 to all zeroes
@@ -129,11 +138,13 @@ bus b(
 	.busi_r14(busi_r14),
 	.busi_r15(busi_r15),
 	.busi_mdr(busi_mdr),
+	.busi_ip(busi_ip),
 	.busi_c_sign(busi_c_sign),
 
 	.pco(pco),
 	.iro(iro),
 	.mdro(mdro),
+	.ipo(ipo),
 	
 	.r0o(R_OUT[0]),
 	.r1o(R_OUT[1]),

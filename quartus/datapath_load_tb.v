@@ -14,6 +14,9 @@ module datapath_load_tb();
 	reg mari, maro;
 	reg mdri, mdro;
 	reg mem_read, mem_write;
+	
+	reg opi, ipi, ipo;
+	reg [31:0] input_unit;
 
 	reg ryi, ryo;
 	
@@ -52,6 +55,8 @@ module datapath_load_tb();
 
 		.mari(mari), .maro(maro),
 		.mdri(mdri), .mdro(mdro),
+		
+		.opi(opi), .ipi(ipi), .ipo(ipo), .input_unit(input_unit),
 		
 		.mem_read(mem_read),
 		.mem_write(mem_write),
@@ -110,6 +115,11 @@ module datapath_load_tb();
 
 		maro <= 0;
 		mdro <= 0;
+		
+		opi <= 0;
+		ipi <= 0;
+		ipo <= 0;
+		input_unit <= 0;
 
 		pc <= 0;
 		pc_immediate <= 0;

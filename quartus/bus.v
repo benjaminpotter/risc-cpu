@@ -4,7 +4,6 @@ module bus (
 	// mux 
 	input wire [31:0] busi_pc, 
 	input wire [31:0] busi_ir,
-	input wire [31:0] busi_mdr,
 	input wire [31:0] busi_r0,
 	input wire [31:0] busi_r1,
 	input wire [31:0] busi_r2,
@@ -21,11 +20,14 @@ module bus (
 	input wire [31:0] busi_r13,
 	input wire [31:0] busi_r14,
 	input wire [31:0] busi_r15,
+	input wire [31:0] busi_mdr,
+	input wire [31:0] busi_ip,
 	input wire [31:0] busi_c_sign,
 
 	// encoder
 	input wire pco, iro,
 	input wire mdro,
+	input wire ipo,
 	input wire r0o,
 	input wire r1o,
 	input wire r2o,
@@ -55,6 +57,8 @@ module bus (
 		if(iro) q = busi_ir;
 
 		if(mdro) q = busi_mdr;
+		
+		if(ipo) q = busi_ip;
 
 		if(r0o) q = busi_r0;
 		if(r1o) q = busi_r1;
