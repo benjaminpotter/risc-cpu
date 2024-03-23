@@ -37,7 +37,7 @@ module select_encode_logic(input [31:0] ir_out,
 		if (rin == 1)  rin_l = 16'b11111111;
 		
 		if ((rout | baout) == 0) out_select = 16'b00000000;
-		if (rin == )  rin_l = 16'b00000000;
+		if (rin == 0)  rin_l = 16'b00000000;
 		
    end
 	
