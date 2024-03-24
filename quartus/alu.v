@@ -35,6 +35,7 @@ module alu (
 	 wire [31:0] neg_out;
 	 wire [31:0] not_out;
 
+	 // instantiate all operation modules
     adder add(a, b, add_out);
 	 adder sub(a, neg_out, sub_out);
 	 
@@ -53,9 +54,9 @@ module alu (
 	 division div(a, b, quo_out, rem_out);
 	 
 
-
     always @(*) begin
 		out[63:32] = 32'b0;
+		// output operation output based on op_select
 		case(op_select)
 			5'b00011: out [31:0] = add_out;
 			5'b00100: out[31:0] = sub_out;

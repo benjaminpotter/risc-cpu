@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 //`include "datapath.v"
 
-module datapath_tb();
+module datapath_load_tb();
 	reg clock, clear;
 
 	// control register signals
@@ -13,12 +13,15 @@ module datapath_tb();
 
 	reg mari, maro;
 	reg mdri, mdro;
-	reg [31:0] mar_immediate, mdr_immediate;
+	reg mem_read, mem_write;
+	
+	reg opi, ipi, ipo;
+	reg [31:0] input_unit;
 
 	reg ryi, ryo;
-
-	reg r0i, r0o;
-	reg r1i, r1o;
+	
+	reg csigno;
+	reg gra, grb, grc, rin, rout, baout;
 
 	parameter 	Default = 4'b0000, 
 				Reg_load1a = 4'b0001, 
@@ -49,26 +52,31 @@ module datapath_tb();
 		.pc_immediate(pc_immediate),
 
 		.ir(ir),
-		.ir_immediate(ir_immediate),
 
 		.mari(mari), .maro(maro),
 		.mdri(mdri), .mdro(mdro),
-
-		.mar_immediate(mar_immediate),
-		.mdr_immediate(mdr_immediate),
-
+		
+		.opi(opi), .ipi(ipi), .ipo(ipo), .input_unit(input_unit),
+		
+		.mem_read(mem_read),
+		.mem_write(mem_write),
+		
 		.ryi(ryi),
 		.ryo(ryo),
-
-		.r0i(r0i), .r0o(r0o),
-		.r1i(r1i), .r1o(r1o)
+		
+		.csigno(csigno),
+		
+		.gra(gra),
+		.grb(grb),
+		.grc(grc),
+		.rin(rin),
+		.rout(rout),
+		.baout(baout)
 	);
 
 	// add test logic here
 	initial
 	begin
-		$dumpfile("datapath.vcd");
-		$dumpvars;
 		clock = 0;
 		forever #10 clock = ~ clock;
 	end
@@ -96,12 +104,6 @@ module datapath_tb();
 	begin
 	case (Present_state) // assert the required signals in each clock cycle
 	Default: begin
-		// PCout <= 0; Zlowout <= 0; MDRout <= 0; // initialize the signals
-		// R2out <= 0; R3out <= 0; MARin <= 0; Zin <= 0;
-		// PCin <=0; MDRin <= 0; IRin <= 0; Yin <= 0;
-		// IncPC <= 0; Read <= 0; AND <= 0;
-		// R1in <= 0; R2in <= 0; R3in <= 0; Mdatain <= 32'h00000000;
-
 		pci <= 0;
 		pco <= 0;
 		
@@ -113,104 +115,93 @@ module datapath_tb();
 
 		maro <= 0;
 		mdro <= 0;
-
+		
+		opi <= 0;
+		ipi <= 0;
+		ipo <= 0;
+		input_unit <= 0;
 
 		pc <= 0;
 		pc_immediate <= 0;
 
 		ir <= 0;
-		ir_immediate <= 0;
 
-		mar_immediate <= 0;
-		mdr_immediate <= 0;
+		mem_read <= 0;
+		mem_write <= 0;
 
 		ryi <= 0;
 		ryo <= 0;
+		
+		csigno <= 0;
+		
+		gra <= 0;
+		grb <= 0;
+		grc <= 0;
+		rin <= 0;
+		rout <= 0;
+		baout <= 0;
 
-		r0i <= 0;
-		r0o <= 0;
-
-		r1i <= 0;
-		r1o <= 0;
 	end
-	Reg_load1a: begin
-		// Mdatain <= 32'h00000012;
-		// Read = 0; MDRin = 0; // the first zero is there for completeness
-		// #10 Read <= 1; MDRin <= 1;
-		// #15 Read <= 0; MDRin <= 0;
-
-		mdr_immediate <= 32'h0000_0009;
-		#10 mdri <= 1;
-		#10 mdri <= 0;
+	Reg_load1a: begin		
+		// load address 0 into mar for first instruction
+		#10 baout <= 1; mari <= 1;
+		#10 baout <= 0; mari <= 0;	
 
 	end
 	Reg_load1b: begin
-		// #10 MDRout <= 1; R2in <= 1;
-		// #15 MDRout <= 0; R2in <= 0; // initialize R2 with the value $12
-
-		#10 mdro <= 1; r0i <= 1;
-		#10 mdro <= 0; r0i <= 0;
-		
+		// read instruction from memory into data register
+		mem_read <= 1; mem_write <= 0;
+		#10 mdri <= 1;
+		#10 mdri <= 0; mem_read <= 0;
 
 	end
 	Reg_load2a: begin
-		// Mdatain <= 32'h00000014;
-		// #10 Read <= 1; MDRin <= 1;
-		// #15 Read <= 0; MDRin <= 0;
-
-		mdr_immediate <= 32'h0000_0006;
-		#10 mdri <= 1;
-		#10 mdri <= 0;
+		// load instruction from data register into ir
+		#10 mdro <= 1; iri <= 1;
+		#10 mdro <= 0; iri <= 0;
 
 	end
 	Reg_load2b: begin
-		// #10 MDRout <= 1; R3in <= 1;
-		// #15 MDRout <= 0; R3in <= 0 // initialize R3 with the value $14
-
-		#10 mdro <= 1; r1i <= 1;
-		#10 mdro <= 0; r1i <= 0;
-
+		// load address from ir into mari for load instruction
+		#10 csigno <= 1; mari <= 1;
+		#10 csigno <= 0; mari <= 0;
+				
 	end
 	Reg_load3a: begin
-		// Mdatain <= 32'h00000018;
-		// #10 Read <= 1; MDRin <= 1;
-		// #15 Read <= 0; MDRin <= 0;
-
+		// read memory and load into mdr
+		mem_read <= 1; mem_write <= 0;
+		#10 mdri <= 1;
+		#10 mdri <= 0;
+		
 	end
 	Reg_load3b: begin
-		// #10 MDRout <= 1; R1in <= 1;
-		// #15 MDRout <= 0; R1in <= 0; // initialize R1 with the value $18
+		#10 mem_read <= 0;
+		
 		
 
 	end
 	T0: begin // see if you need to de-assert these signals
-		// PCout <= 1; MARin <= 1; IncPC <= 1; Zin <= 1;
-		
-
-		mdr_immediate <= {5'b00100, 27'b0};
-		#10 mdri <= 1; 
-	    #10 mdri <= 0;	
+		// output mdr onto bus and load contents into desired register from ir
+		#10 mdro <= 1; gra <= 1; rin <= 1;
+		#10 mdro <= 0; gra <= 0; rin <= 0;
 		
 	end
 	T1: begin
 		// Zlowout <= 1; PCin <= 1; Read <= 1; MDRin <= 1;
 		// Mdatain <= 32'h28918000; // opcode for “and R1, R2, R3”
 		
-		#10 mdro <= 1; iri <= 1;
-		#10 mdro <= 0; iri <= 0;
+		
 	end
 	T2: begin
 		// MDRout <= 1; IRin <= 1;
-		#10 r0o <= 1; ryi <= 1;
-		#10 r0o <= 0; ryi <= 0;
+		
 		
 		
 	end
 	T3: begin
 		// R2out <= 1; Yin <= 1;
 		
-		#10 r1o <= 1; 
-		#10 r1o <= 0;
+		
 	end
 	T4: begin
 		// R3out <= 1; AND <= 1; Zin <= 1;
@@ -218,7 +209,6 @@ module datapath_tb();
 	T5: begin
 		// Zlowout <= 1; R1in <= 1;
 
-		$finish;
 	end
 	endcase
 	end

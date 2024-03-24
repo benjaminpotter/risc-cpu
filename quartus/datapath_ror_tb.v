@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 //`include "datapath.v"
 
-module datapath_tb();
+module datapath_ror_tb();
 	reg clock, clear;
 
 	// control register signals
@@ -67,8 +67,8 @@ module datapath_tb();
 	// add test logic here
 	initial
 	begin
-		$dumpfile("datapath.vcd");
-		$dumpvars;
+		//$dumpfile("datapath.vcd");
+		//$dumpvars;
 		clock = 0;
 		forever #10 clock = ~ clock;
 	end
@@ -139,7 +139,7 @@ module datapath_tb();
 		// #10 Read <= 1; MDRin <= 1;
 		// #15 Read <= 0; MDRin <= 0;
 
-		mdr_immediate <= 32'h0000_0009;
+		mdr_immediate <= 32'h0000_0003; // value to be rotated
 		#10 mdri <= 1;
 		#10 mdri <= 0;
 
@@ -158,14 +158,14 @@ module datapath_tb();
 		// #10 Read <= 1; MDRin <= 1;
 		// #15 Read <= 0; MDRin <= 0;
 
-		mdr_immediate <= 32'h0000_0006;
+		mdr_immediate <= 32'h0000_0002; // rotate amount
 		#10 mdri <= 1;
 		#10 mdri <= 0;
 
 	end
 	Reg_load2b: begin
 		// #10 MDRout <= 1; R3in <= 1;
-		// #15 MDRout <= 0; R3in <= 0 // initialize R3 with the value $14
+		// #15 MDRout <= 0; R3in <= 0; // initialize R3 with the value $14
 
 		#10 mdro <= 1; r1i <= 1;
 		#10 mdro <= 0; r1i <= 0;
@@ -187,7 +187,7 @@ module datapath_tb();
 		// PCout <= 1; MARin <= 1; IncPC <= 1; Zin <= 1;
 		
 
-		mdr_immediate <= {5'b00100, 27'b0};
+		mdr_immediate <= {5'b01000, 27'b0};
 		#10 mdri <= 1; 
 	    #10 mdri <= 0;	
 		
@@ -218,7 +218,7 @@ module datapath_tb();
 	T5: begin
 		// Zlowout <= 1; R1in <= 1;
 
-		$finish;
+		//$finish;
 	end
 	endcase
 	end
