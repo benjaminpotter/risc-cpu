@@ -12,6 +12,7 @@ TOPLEVEL = $(DUT)
 MODULE   = test_$(DUT)
 VERILOG_SOURCES += ../../quartus/$(DUT).v
 VERILOG_SOURCES += ../../quartus/register.v
+VERILOG_SOURCES += ../../quartus/conff.v
 VERILOG_SOURCES += ../../quartus/md_mux.v
 VERILOG_SOURCES += ../../quartus/bus.v
 VERILOG_SOURCES += ../../quartus/alu.v

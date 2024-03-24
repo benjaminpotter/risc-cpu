@@ -1,6 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="1711301499" />
-    <testcase name="run_test" classname="test_datapath" file="/home/bp/class/elec374/risc-cpu/tb/datapath/test_datapath.py" lineno="147" time="0.0034661293029785156" sim_time_ns="115.001" ratio_time="33178.50834392627" />
-  </testsuite>
-</testsuites>

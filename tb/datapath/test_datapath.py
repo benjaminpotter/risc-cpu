@@ -28,6 +28,9 @@ async def reset_dut(dut):
     dut.ipo.value = 0
     dut.input_unit.value = 0
 
+    dut.con.value = 0
+    dut.con_in.value = 0
+
     dut.pc.value = 0
     dut.pc_immediate.value = 0
 
@@ -107,7 +110,7 @@ async def test_load(dut):
 async def test_branch(dut):
 
     # preload R5
-    dut.buso.value = 69
+    dut.buso.value = 0
     dut.R_IN[5].value = 1
     await RisingEdge(dut.clock)
     dut.buso.value = 0
@@ -142,6 +145,8 @@ async def test_branch(dut):
     dut.gra.value = 0
     dut.rout.value = 0
 
+    dut.con_in.value = 1
+    await RisingEdge(dut.clock)
 
 
 @cocotb.test()
