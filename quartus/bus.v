@@ -21,12 +21,17 @@ module bus (
 	input wire [31:0] busi_r14,
 	input wire [31:0] busi_r15,
 	input wire [31:0] busi_mdr,
+	input wire [31:0] busi_hi,
+	input wire [31:0] busi_lo,
+	input wire [31:0] busi_rz_hi,
+	input wire [31:0] busi_rz_lo,
 	input wire [31:0] busi_ip,
 	input wire [31:0] busi_c_sign,
 
 	// encoder
 	input wire pco, iro,
-	input wire mdro,
+	input wire mdro, 
+	input wire hio, loo, rzho, rzlo,
 	input wire ipo,
 	input wire r0o,
 	input wire r1o,
@@ -58,10 +63,30 @@ module bus (
 
 		if(mdro) q = busi_mdr;
 		
+		if(hio) q = busi_hi;
+		if(loo) q = busi_lo;
+		
+		if(rzho) q = busi_rz_hi;
+		if(rzlo) q = busi_rz_lo;
+		
 		if(ipo) q = busi_ip;
 
 		if(r0o) q = busi_r0;
 		if(r1o) q = busi_r1;
+		if(r2o) q = busi_r2;
+		if(r3o) q = busi_r3;
+		if(r4o) q = busi_r4;
+		if(r5o) q = busi_r5;
+		if(r6o) q = busi_r6;
+		if(r7o) q = busi_r7;
+		if(r8o) q = busi_r8;
+		if(r9o) q = busi_r9;
+		if(r10o) q = busi_r10;
+		if(r11o) q = busi_r11;
+		if(r12o) q = busi_r12;
+		if(r13o) q = busi_r13;
+		if(r14o) q = busi_r14;
+		if(r15o) q = busi_r15;
 		
 		if(csigno) q = busi_c_sign;
 	end
