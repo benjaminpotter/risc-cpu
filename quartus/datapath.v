@@ -10,27 +10,28 @@ module datapath(
 	input wire iri, iro,
 
 	input wire [31:0] pc, pc_immediate,
-	input wire [31:0] ir,
+	input wire [31:0] ir, ir_immediate,
 
 	// memory register signals
 	input wire mari, maro,
 	input wire mdri, mdro,
 	
-	// inport and outport signals
-	input wire opi, ipi, ipo,
-	input wire input_unit,
-	
-	// memory and mdr signals
+		// memory and mdr signals
 	input wire mem_read,
 	input wire mem_write,
+	
+	// inport and outport signals
+	input wire opi, ipi, ipo,
+	input wire [31:0] input_unit,
+	//input wire [31:0] output_unit,
 
 	// 64 bit register signals
 	input wire hii, hio,
 	input wire loi, loo,
-
+	
 	// alu register signals
 	input wire ryi, ryo,
-	input wire rzi, rzo,
+	input wire rzhi, rzli, rzho, rzlo, rzo,
 	
 	// c sign extended signal
 	input wire csigno,
@@ -42,6 +43,7 @@ module datapath(
 
 wire [31:0] busi_pc, busi_ir;
 wire [31:0] memi_mar, busi_mdr; 
+wire [31:0] busi_hi, busi_lo;
 wire [31:0] busi_rz_hi, busi_rz_lo;
 wire [31:0] busi_r0, busi_r1, busi_r2, busi_r3, busi_r4, busi_r5, busi_r6, busi_r7, busi_r8, busi_r9, busi_r10, busi_r11, busi_r12, busi_r13, busi_r14, busi_r15;
 wire [31:0] busi_ip;
@@ -82,13 +84,15 @@ mdMux md_mux(
 );
 
 // // 64 bit register
-// register hi();
-// register lo();
+
+//reg [31:0] lo_in = 32'h01010100;
+register hi(clear, clock, hii, buso, busi_hi);
+register lo(clear, clock, loi, buso, busi_lo);
 
 // alu registers
 register ry(clear, clock, ryi, buso, alua);
-register rz_hi(clear, clock, rzi, aluo[63:32], busi_rz_hi);
-register rz_lo(clear, clock, rzi, aluo[31:0], busi_rz_lo);
+register rz_hi(clear, clock, rzhi, aluo[63:32], busi_rz_hi);
+register rz_lo(clear, clock, rzli, aluo[31:0], busi_rz_lo);
 
 // input and output ports
 wire [31:0] output_unit;
@@ -100,9 +104,12 @@ register inport(clear, clock, ipi, input_unit, busi_ip);
 reg [31:0] r0_in = 32'b0;
 register r0(clear, clock, baout, r0_in, busi_r0);
 
+reg [31:0] r2_in = 32'h00000002;
+reg [31:0] r3_in = 32'h0F0F0F0F;
+
 register r1(clear, clock, R_IN[1], buso, busi_r1);
-register r2(clear, clock, R_IN[2], buso, busi_r2);
-register r3(clear, clock, R_IN[3], buso, busi_r3);
+register r2(clear, clock, R_IN[2], r2_in, busi_r2);
+register r3(clear, clock, R_IN[3], r3_in, busi_r3);
 register r4(clear, clock, R_IN[4], buso, busi_r4);
 register r5(clear, clock, R_IN[5], buso, busi_r5);
 register r6(clear, clock, R_IN[6], buso, busi_r6);
@@ -138,12 +145,20 @@ bus b(
 	.busi_r14(busi_r14),
 	.busi_r15(busi_r15),
 	.busi_mdr(busi_mdr),
+	.busi_hi(busi_hi),
+	.busi_lo(busi_lo),
+	.busi_rz_hi(busi_rz_hi),
+	.busi_rz_lo(busi_rz_lo),
 	.busi_ip(busi_ip),
 	.busi_c_sign(busi_c_sign),
 
 	.pco(pco),
 	.iro(iro),
 	.mdro(mdro),
+	.hio(hio),
+	.loo(loo),
+	.rzho(rzho),
+	.rzlo(rzlo),
 	.ipo(ipo),
 	
 	.r0o(R_OUT[0]),
