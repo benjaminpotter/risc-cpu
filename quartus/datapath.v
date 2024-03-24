@@ -167,6 +167,10 @@ bus b(
 	.buso(buso)
 );
 
+always @(posedge clear) begin
+end
+   
+
 assign op_select = busi_ir[31:27];
 assign alub = buso;
 

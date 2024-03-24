@@ -7,10 +7,10 @@ WAVES ?= 1
 COCOTB_HDL_TIMEUNIT = 1ns
 COCOTB_HDL_TIMEPRECISION = 1ps
 
-DUT      = adder
+DUT      = conff
 TOPLEVEL = $(DUT)
 MODULE   = test_$(DUT)
-VERILOG_SOURCES += ../../rtl/$(DUT).v
+VERILOG_SOURCES += ../../quartus/$(DUT).v
 
 ifeq ($(SIM), icarus)
 	PLUSARGS += -fst

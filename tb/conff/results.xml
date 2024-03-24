@@ -1,0 +1,6 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1711210017" />
+    <testcase name="run_test" classname="test_conff" file="/home/bp/class/elec374/risc-cpu/tb/conff/test_conff.py" lineno="6" time="0.0006656646728515625" sim_time_ns="60.001" ratio_time="90136.97503724929" />
+  </testsuite>
+</testsuites>
