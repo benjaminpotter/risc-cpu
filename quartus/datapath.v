@@ -63,7 +63,7 @@ wire [31:0] ram_data_out;
 wire [31:0] md_mux_out;
 
 // control registers
-register rpc(clear, clock, pci, pc_immediate, busi_pc);
+register rpc(clear, clock, pci, buso, busi_pc);
 register rir(clear, clock, iri, buso, busi_ir);
 
 // memory registers
@@ -189,6 +189,12 @@ conff con_logic(
     .ir(iro),
     .con_in(con_in),
     .con(con)
+);
+
+control control_logic(
+    .clock(clock),
+    .reset(clear),
+    .ir(iro)
 );
 
 assign op_select = busi_ir[31:27];

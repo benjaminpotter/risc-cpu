@@ -213,10 +213,53 @@ async def test_load_imm(dut):
     assert dut.busi_r1.value == 0x0000000C
 
 
+async def test_jump(dut):
+
+    # preload R2
+    dut.buso.value = 2
+    dut.R_IN[2].value = 1
+    await RisingEdge(dut.clock)
+    dut.buso.value = 0
+    dut.R_IN[2].value = 0
+
+    dut.baout.value = 1
+    dut.mari.value = 1
+
+    await RisingEdge(dut.clock)
+    dut.baout.value = 0
+    dut.mari.value = 0
+
+    dut.mem_read.value = 1
+    dut.mem_write.value = 0 
+    dut.mdri.value = 1
+
+    await RisingEdge(dut.clock)
+    dut.mem_read.value = 0
+    dut.mdri.value = 0
+
+    dut.mdro.value = 1
+    dut.iri.value = 1
+
+    await RisingEdge(dut.clock)
+    dut.mdro.value = 0
+    dut.iri.value = 0
+
+    dut.gra.value = 1
+    dut.rout.value = 1
+
+    await RisingEdge(dut.clock)
+    dut.gra.value = 0
+    dut.rout.value = 0
+
+    dut.pci.value = 1
+    await RisingEdge(dut.clock)
+    dut.pci.value = 0
+
+
 async def test_branch(dut):
 
     # preload R5
-    dut.buso.value = 0
+    dut.buso.value = 5
     dut.R_IN[5].value = 1
     await RisingEdge(dut.clock)
     dut.buso.value = 0
@@ -253,6 +296,11 @@ async def test_branch(dut):
 
     dut.con_in.value = 1
     await RisingEdge(dut.clock)
+    dut.con_in.value = 0
+
+
+async def test_control(dut):
+    await Timer(500, 'ns') 
 
 
 @cocotb.test()
@@ -267,6 +315,11 @@ async def run_test(dut):
         await RisingEdge(dut.clock) 
 
     # await test_load_indexed(dut)
-    await test_load_imm(dut)
+    # await test_load_imm(dut)
     # await test_branch(dut)
+    # await test_jump(dut)
+    await test_control(dut)
+
+    for i in range(5):
+        await RisingEdge(dut.clock)
 

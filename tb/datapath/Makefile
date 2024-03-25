@@ -31,6 +31,7 @@ VERILOG_SOURCES += ../../quartus/rotate_left.v
 VERILOG_SOURCES += ../../quartus/rotate_right.v
 VERILOG_SOURCES += ../../quartus/select_encode_logic.v
 VERILOG_SOURCES += ../../quartus/decoder.v
+VERILOG_SOURCES += ../../quartus/control.v
 
 ifeq ($(SIM), icarus)
 	PLUSARGS += -fst
