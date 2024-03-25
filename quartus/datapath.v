@@ -194,7 +194,10 @@ conff con_logic(
 control control_logic(
     .clock(clock),
     .reset(clear),
-    .ir(iro)
+    .ir(iro),
+
+    .pci(pci), .pco(pco),
+    .mari(mari), .maro(maro)
 );
 
 assign op_select = busi_ir[31:27];

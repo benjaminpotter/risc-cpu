@@ -4,8 +4,8 @@ module control(
     input [31:0] ir,
 
     // control signals required
-    input pci, pco,
-    input mari, maro
+    output reg pci, pco,
+    output reg mari, maro
 );
 
     parameter   reset_state = 4'b0000,
@@ -24,12 +24,11 @@ module control(
     always @(current_state) begin
         case(current_state)
             reset_state: begin
-
+                #10 pco <= 0; mari <= 0;
             end 
             fetch0_state: begin
-                pco <= 1;
-               
-                
+                #10 pco <= 1; mari <= 1;
+                #10 pco <= 0; mari <= 0;
             end
         endcase
     end
