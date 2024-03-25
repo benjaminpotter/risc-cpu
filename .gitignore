@@ -23,6 +23,11 @@
 # design.
 
 *.swp
+*.fst
+**/results.xml
+**/sim_build/**
+**/__pycache__/**
+**/iverilog_dump.v
 
 # Need to keep all HDL files
 # *.vhd

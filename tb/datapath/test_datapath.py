@@ -54,7 +54,16 @@ async def reset_dut(dut):
     await Timer(5, 'ns')
 
 
-async def test_load(dut):
+async def test_load_indexed(dut):
+
+    # preload R2 with offset
+    dut.buso.value = 2
+    dut.R_IN[2].value = 1
+    await RisingEdge(dut.clock)
+    dut.buso.value = 0
+    dut.R_IN[2].value = 0
+
+    # set mar addr to zero
     dut.baout.value = 1
     dut.mari.value = 1
 
@@ -62,6 +71,7 @@ async def test_load(dut):
     dut.baout.value = 0
     dut.mari.value = 0
 
+    # read instruction from memory into data register
     dut.mem_read.value = 1
     dut.mem_write.value = 0 
     dut.mdri.value = 1
@@ -70,6 +80,7 @@ async def test_load(dut):
     dut.mem_read.value = 0
     dut.mdri.value = 0
 
+    # transfer to ir
     dut.mdro.value = 1
     dut.iri.value = 1
 
@@ -77,11 +88,34 @@ async def test_load(dut):
     dut.mdro.value = 0
     dut.iri.value = 0
 
+    # load c value into ry
     dut.csigno.value = 1
-    dut.mari.value = 1
+    dut.ryi.value = 1
 
     await RisingEdge(dut.clock)
     dut.csigno.value = 0
+    dut.ryi.value = 0
+
+    # set alu to addition
+    dut.op_select.value = 0b00011 
+
+    # put rb onto bus
+    # capture in rz
+    dut.grb.value = 1
+    dut.rout.value = 1
+    dut.rzli.value = 1
+    
+    await RisingEdge(dut.clock)
+    dut.grb.value = 0
+    dut.rout.value = 0
+    dut.rzli.value = 0
+
+    # capture result in mar
+    dut.rzlo.value = 1
+    dut.mari.value = 1
+
+    await RisingEdge(dut.clock)
+    dut.rzlo.value = 0
     dut.mari.value = 0
 
     dut.mem_read.value = 1
@@ -104,7 +138,79 @@ async def test_load(dut):
     for i in range(5):
         await RisingEdge(dut.clock)
     
-    assert dut.busi_r1.value == 0xFFFFFFFF 
+    assert dut.busi_r1.value == 0x1234567
+
+
+async def test_load_imm(dut):
+
+    # preload R2 with offset
+    dut.buso.value = 2
+    dut.R_IN[2].value = 1
+    await RisingEdge(dut.clock)
+    dut.buso.value = 0
+    dut.R_IN[2].value = 0
+
+    # set mar addr to zero
+    dut.baout.value = 1
+    dut.mari.value = 1
+
+    await RisingEdge(dut.clock)
+    dut.baout.value = 0
+    dut.mari.value = 0
+
+    # read instruction from memory into data register
+    dut.mem_read.value = 1
+    dut.mem_write.value = 0 
+    dut.mdri.value = 1
+
+    await RisingEdge(dut.clock)
+    dut.mem_read.value = 0
+    dut.mdri.value = 0
+
+    # transfer to ir
+    dut.mdro.value = 1
+    dut.iri.value = 1
+
+    await RisingEdge(dut.clock)
+    dut.mdro.value = 0
+    dut.iri.value = 0
+
+    # load c value into ry
+    dut.csigno.value = 1
+    dut.ryi.value = 1
+
+    await RisingEdge(dut.clock)
+    dut.csigno.value = 0
+    dut.ryi.value = 0
+
+    # set alu to addition
+    dut.op_select.value = 0b00011 
+
+    # put rb onto bus
+    # capture in rz
+    dut.grb.value = 1
+    dut.rout.value = 1
+    dut.rzli.value = 1
+    
+    await RisingEdge(dut.clock)
+    dut.grb.value = 0
+    dut.rout.value = 0
+    dut.rzli.value = 0
+
+    # capture result in mar
+    dut.rzlo.value = 1
+    dut.gra.value = 1
+    dut.rin.value = 1
+
+    await RisingEdge(dut.clock)
+    dut.rzlo.value = 0
+    dut.gra.value = 0
+    dut.rin.value = 0
+
+    for i in range(5):
+        await RisingEdge(dut.clock)
+    
+    assert dut.busi_r1.value == 0x0000000C
 
 
 async def test_branch(dut):
@@ -160,6 +266,7 @@ async def run_test(dut):
     for i in range(5):
         await RisingEdge(dut.clock) 
 
-    # await test_load(dut)
-    await test_branch(dut)
+    # await test_load_indexed(dut)
+    await test_load_imm(dut)
+    # await test_branch(dut)
 
