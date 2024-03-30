@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 //`include "datapath.v"
 
-module datapath_load_tb();
+module datapath_load_imm_tb();
 	reg clock, clear;
 
 	// control register signals
@@ -140,73 +140,46 @@ module datapath_load_tb();
 		rin <= 0;
 		rout <= 0;
 		baout <= 0;
-
 	end
 	Reg_load1a: begin		
 		// load address 0 into mar for first instruction
 		#10 baout <= 1; mari <= 1;
 		#10 baout <= 0; mari <= 0;	
-
 	end
 	Reg_load1b: begin
 		// read instruction from memory into data register
 		mem_read <= 1; mem_write <= 0;
 		#10 mdri <= 1;
 		#10 mdri <= 0; mem_read <= 0;
-
 	end
 	Reg_load2a: begin
 		// load instruction from data register into ir
 		#10 mdro <= 1; iri <= 1;
 		#10 mdro <= 0; iri <= 0;
-
 	end
 	Reg_load2b: begin
-		// load address from ir into mari for load instruction
-		#10 csigno <= 1; mari <= 1;
-		#10 csigno <= 0; mari <= 0;
-				
+		// load into mdr csign from bus
+		#10 mdri <= 1; csigno <= 1;
+		#10 mdri <= 0; csigno <= 0;	
 	end
 	Reg_load3a: begin
-		// read memory and load into mdr
-		mem_read <= 1; mem_write <= 0;
-		#10 mdri <= 1;
-		#10 mdri <= 0; mem_read <= 0;
-		
-	end
-	Reg_load3b: begin
+		// load mdr into ra
 		#10 mdro <= 1; gra <= 1; rin <= 1;
 		#10 mdro <= 0; gra <= 0; rin <= 0;
-
 	end
-	T0: begin // see if you need to de-assert these signals
-		// output mdr onto bus and load contents into desired register from ir
-
-		
+	Reg_load3b: begin
+	end
+	T0: begin
 	end
 	T1: begin
-		// Zlowout <= 1; PCin <= 1; Read <= 1; MDRin <= 1;
-		// Mdatain <= 32'h28918000; // opcode for “and R1, R2, R3”
-		
-		
 	end
 	T2: begin
-		// MDRout <= 1; IRin <= 1;
-		
-		
-		
 	end
 	T3: begin
-		// R2out <= 1; Yin <= 1;
-		
-		
 	end
 	T4: begin
-		// R3out <= 1; AND <= 1; Zin <= 1;
 	end
 	T5: begin
-		// Zlowout <= 1; R1in <= 1;
-
 	end
 	endcase
 	end

@@ -12,18 +12,17 @@ module ram(
 	input wire [8:0] address
 );
 	
-	//reg [31:0] temp_data = 32'hFFFF_FFFF;
 	reg [31:0] memory [0:511];
 	
 	initial begin
-		$readmemh("/home/bp/class/elec374/risc-cpu/quartus/mem.txt", memory);
+		$readmemh("C:/Users/solob/intelFPGA_lite/18.1/elec374/risc-cpu/quartus/mem.txt", memory);
 	end
 	
-	always@(posedge clock) begin
+	always@(write) begin
 		if (write)
-			memory[address] <= data_in;
+			memory[address] = data_in;
 	end
 	
-	assign data_out = memory[address]; // ESES always assign, used to have temp_data???
+	assign data_out = memory[address];
 	
 endmodule 

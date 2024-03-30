@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 //`include "datapath.v"
 
-module datapath_load_tb();
+module datapath_store_tb();
 	reg clock, clear;
 
 	// control register signals
@@ -51,7 +51,7 @@ module datapath_load_tb();
 		.pc(pc),
 		.pc_immediate(pc_immediate),
 
-		.ir(ir),
+		.ir(ir), .ir_immediate(ir_immediate),
 
 		.mari(mari), .maro(maro),
 		.mdri(mdri), .mdro(mdro),
@@ -146,67 +146,51 @@ module datapath_load_tb();
 		// load address 0 into mar for first instruction
 		#10 baout <= 1; mari <= 1;
 		#10 baout <= 0; mari <= 0;	
-
 	end
 	Reg_load1b: begin
 		// read instruction from memory into data register
 		mem_read <= 1; mem_write <= 0;
 		#10 mdri <= 1;
 		#10 mdri <= 0; mem_read <= 0;
-
 	end
 	Reg_load2a: begin
 		// load instruction from data register into ir
 		#10 mdro <= 1; iri <= 1;
 		#10 mdro <= 0; iri <= 0;
-
 	end
-	Reg_load2b: begin
-		// load address from ir into mari for load instruction
-		#10 csigno <= 1; mari <= 1;
-		#10 csigno <= 0; mari <= 0;
-				
+	Reg_load2b: begin		
+		// load hardcoded value into ra (r1)
+		#10 gra <= 1; rin <= 1;
+		#10 gra <= 0; rin <= 0;	
 	end
 	Reg_load3a: begin
-		// read memory and load into mdr
-		mem_read <= 1; mem_write <= 0;
-		#10 mdri <= 1;
-		#10 mdri <= 0; mem_read <= 0;
-		
+		// output value of ra (r1) onto bus
+		#10 gra <= 1; rout <= 1;
+		#10 gra <= 0; rout <= 0;
 	end
 	Reg_load3b: begin
-		#10 mdro <= 1; gra <= 1; rin <= 1;
-		#10 mdro <= 0; gra <= 0; rin <= 0;
-
+		// load value from bus into mdr, mem_read is select of mdr mux
+		#10 mem_read <= 0; mdri <= 1;
+		#10 mdri <= 0;
 	end
 	T0: begin // see if you need to de-assert these signals
-		// output mdr onto bus and load contents into desired register from ir
-
-		
+		// load address from ir into mari for store instruction
+		#10 csigno <= 1; mari <= 1;
+		#10 csigno <= 0; mari <= 0;
 	end
 	T1: begin
-		// Zlowout <= 1; PCin <= 1; Read <= 1; MDRin <= 1;
-		// Mdatain <= 32'h28918000; // opcode for “and R1, R2, R3”
-		
-		
+		// write value of mdr into ram
+		mem_write <= 1;
 	end
 	T2: begin
-		// MDRout <= 1; IRin <= 1;
-		
-		
-		
+		// deassert write signal
+		#10 mem_write <= 0;
 	end
 	T3: begin
-		// R2out <= 1; Yin <= 1;
-		
-		
 	end
 	T4: begin
-		// R3out <= 1; AND <= 1; Zin <= 1;
 	end
 	T5: begin
-		// Zlowout <= 1; R1in <= 1;
-
 	end
 	endcase
 	end
