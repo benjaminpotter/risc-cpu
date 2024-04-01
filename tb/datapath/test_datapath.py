@@ -306,7 +306,7 @@ async def test_control(dut):
 @cocotb.test()
 async def run_test(dut):
     """ Test datapath.v """
-    await reset_dut(dut)
+#    await reset_dut(dut)
 
     clk = Clock(dut.clock, 10, 'ns')
     await cocotb.start(clk.start())

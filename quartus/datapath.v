@@ -3,43 +3,42 @@
 //`include "bus.v"
 
 module datapath(
-	input wire clock, clear,
-
-	// control register signals
-	input wire pci, pco,
-	input wire iri, iro,
-
-	input wire [31:0] pc, pc_immediate,
-	input wire [31:0] ir, 
-
-	// memory register signals
-	input wire mari, maro,
-	input wire mdri, mdro,
-	
-		// memory and mdr signals
-	input wire mem_read,
-	input wire mem_write,
-	
-	// inport and outport signals
-	input wire opi, ipi, ipo,
-	input wire [31:0] input_unit,
-	//input wire [31:0] output_unit,
-
-	// 64 bit register signals
-	input wire hii, hio,
-	input wire loi, loo,
-	
-	// alu register signals
-	input wire ryi, ryo,
-	input wire rzhi, rzli, rzho, rzlo, rzo,
-	
-	// c sign extended signal
-	input wire csigno,
-	
-	// select and encode and register file signals
-	input wire gra, grb, grc, rin, rout, baout
-	
+	input wire clock, clear
 );
+
+// control register signals
+wire pci, pco;
+wire iri, iro;
+
+wire [31:0] pc;
+wire [31:0] ir;
+
+// memory register signals
+wire mari, maro;
+wire mdri, mdro;
+
+// memory and mdr signals
+wire mem_read;
+wire mem_write;
+
+// inport and outport signals
+wire opi, ipi, ipo;
+wire [31:0] input_unit;
+//input wire [31:0] output_unit,
+
+// 64 bit register signals
+wire hii, hio;
+wire loi, loo;
+
+// alu register signals
+wire ryi, ryo;
+wire rzhi, rzli, rzho, rzlo, rzo;
+
+// c sign extended signal
+wire csigno;
+
+// select and encode and register file signals
+wire gra, grb, grc, rin, rout, baout;
 
 wire [31:0] busi_pc, busi_ir;
 wire [31:0] memi_mar, busi_mdr; 
@@ -193,12 +192,24 @@ conff con_logic(
 );
 
 control control_logic(
-    .clock(clock),
-    .reset(clear),
-    .ir(iro),
+    clock, clear, busi_ir,
 
-    .pci(pci), .pco(pco),
-    .mari(mari), .maro(maro)
+    pci, pco,
+	iri, iro,
+    mari, maro,
+    mdri, mdro,
+
+    mem_read, mem_write,
+
+    opi, ipi, ipo,
+
+    hii, hio,
+    loi, loo,
+
+    ryi, ryo,
+    rzhi, rzli, rzho, rzlo, rzo,
+    gra, grb, grc, rin, rout, baout,
+    csigno
 );
 
 assign op_select = busi_ir[31:27];
