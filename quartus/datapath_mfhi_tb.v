@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 //`include "datapath.v"
 
-module datapath_addi_tb();
+module datapath_mfhi_tb();
 	reg clock, clear;
 
 	// control register signals
@@ -54,7 +54,7 @@ module datapath_addi_tb();
 		.pc(pc),
 		.pc_immediate(pc_immediate),
 
-		.ir(ir), 
+		.ir(ir),
 
 		.mari(mari), .maro(maro),
 		.mdri(mdri), .mdro(mdro),
@@ -69,9 +69,9 @@ module datapath_addi_tb();
 		.ryi(ryi),
 		.ryo(ryo),
 		
-		.rzhi(rzhi), .rzli(rzli), .rzho(rzho), .rzlo(rzlo), .rzo(rzo),
-		
 		.csigno(csigno),
+		
+		.rzhi(rzhi), .rzli(rzli), .rzho(rzho), .rzlo(rzlo), .rzo(rzo),
 		
 		.gra(gra),
 		.grb(grb),
@@ -161,7 +161,7 @@ module datapath_addi_tb();
 
 	end
 	Reg_load1a: begin		
-		// load address 0 into mar for addi instruction
+		// load address 0 into mar for first instruction
 		#10 baout <= 1; mari <= 1;
 		#10 baout <= 0; mari <= 0;	
 
@@ -180,46 +180,30 @@ module datapath_addi_tb();
 
 	end
 	Reg_load2b: begin
-		//load hardcoded value into rb
-		#10 grb <= 1; rin <= 1; 
-		#10 grb <= 0; rin <= 0; 
+		//put hardcoded value into hi reg
+		#10 hii <= 1;
+		#10 hii <= 0;
 				
 	end
 	Reg_load3a: begin
-		// put rb value on bus and capture in ry
-		#10 grb <= 1; rout <= 1; ryi <= 1;
-		#10 grb <= 0; rout <= 0; ryi <= 0; 
+		// put hi reg value on bus to be captured into ra
+		#10 hio <= 1; gra <= 1; rin <= 1;
+		#10 hio <= 0; gra <= 0; rin <= 0; 
 		
 	end
-	Reg_load3b: begin	
-		// put s sign extended on bus and capture in rz lo
-		#10 csigno <= 1; rzli <= 1;
-		#10 csigno <= 0; rzli <= 0;
-
+	Reg_load3b: begin
 	end
-	T0: begin 		
-		// put rz lo value on bus and capture in ra
-		#10 rzlo <= 1; rin <= 1; gra = 1;
-		#10 rzlo <= 0; rin <= 0; gra = 0;
-		
+	T0: begin 
 	end
 	T1: begin
-		
-		
 	end
-	T2: begin	
-		
-		
+	T2: begin		
 	end
 	T3: begin
-	
-		
 	end
 	T4: begin
-	
 	end
 	T5: begin
-
 	end
 	endcase
 	end

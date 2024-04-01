@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 //`include "datapath.v"
 
-module datapath_addi_tb();
+module datapath_input_tb();
 	reg clock, clear;
 
 	// control register signals
@@ -54,7 +54,7 @@ module datapath_addi_tb();
 		.pc(pc),
 		.pc_immediate(pc_immediate),
 
-		.ir(ir), 
+		.ir(ir),
 
 		.mari(mari), .maro(maro),
 		.mdri(mdri), .mdro(mdro),
@@ -64,12 +64,8 @@ module datapath_addi_tb();
 		.mem_read(mem_read),
 		.mem_write(mem_write),
 		
-		.hii(hii), .hio(hio), .loi(loi), .loo(loo),
-		
 		.ryi(ryi),
 		.ryo(ryo),
-		
-		.rzhi(rzhi), .rzli(rzli), .rzho(rzho), .rzlo(rzlo), .rzo(rzo),
 		
 		.csigno(csigno),
 		
@@ -135,20 +131,9 @@ module datapath_addi_tb();
 
 		mem_read <= 0;
 		mem_write <= 0;
-		
-		hii <= 0;
-		hio <= 0;
-	   loi <= 0;
-		loo <= 0;
 
 		ryi <= 0;
 		ryo <= 0;
-		
-		rzhi <= 0;
-	   rzli <= 0;
-		rzho <= 0;
-	   rzlo <= 0;
-		rzo <= 0;
 		
 		csigno <= 0;
 		
@@ -161,7 +146,7 @@ module datapath_addi_tb();
 
 	end
 	Reg_load1a: begin		
-		// load address 0 into mar for addi instruction
+		// load address 0 into mar for first instruction
 		#10 baout <= 1; mari <= 1;
 		#10 baout <= 0; mari <= 0;	
 
@@ -180,46 +165,32 @@ module datapath_addi_tb();
 
 	end
 	Reg_load2b: begin
-		//load hardcoded value into rb
-		#10 grb <= 1; rin <= 1; 
-		#10 grb <= 0; rin <= 0; 
+		//load input unit into inport reg
+		input_unit <= 32'h0000FFFF;
+		#10 ipi <= 1;
+		#10 ipi <= 0;
 				
 	end
 	Reg_load3a: begin
-		// put rb value on bus and capture in ry
-		#10 grb <= 1; rout <= 1; ryi <= 1;
-		#10 grb <= 0; rout <= 0; ryi <= 0; 
+		// move inport reg into ra
+		#10 ipo <= 1; gra <= 1; rin <= 1;
+		#10 ipo <= 0; gra <= 0; rin <= 0;
 		
 	end
-	Reg_load3b: begin	
-		// put s sign extended on bus and capture in rz lo
-		#10 csigno <= 1; rzli <= 1;
-		#10 csigno <= 0; rzli <= 0;
+	Reg_load3b: begin
 
 	end
-	T0: begin 		
-		// put rz lo value on bus and capture in ra
-		#10 rzlo <= 1; rin <= 1; gra = 1;
-		#10 rzlo <= 0; rin <= 0; gra = 0;
-		
+	T0: begin 
 	end
 	T1: begin
-		
-		
 	end
-	T2: begin	
-		
-		
+	T2: begin
 	end
-	T3: begin
-	
-		
+	T3: begin		
 	end
 	T4: begin
-	
 	end
 	T5: begin
-
 	end
 	endcase
 	end

@@ -10,7 +10,7 @@ module datapath(
 	input wire iri, iro,
 
 	input wire [31:0] pc, pc_immediate,
-	input wire [31:0] ir, ir_immediate,
+	input wire [31:0] ir, 
 
 	// memory register signals
 	input wire mari, maro,
@@ -86,9 +86,10 @@ mdMux md_mux(
 
 // // 64 bit register
 
-//reg [31:0] lo_in = 32'h01010100;
-register hi(clear, clock, hii, buso, busi_hi);
-register lo(clear, clock, loi, buso, busi_lo);
+reg [31:0] hi_in = 32'h0000000F;
+//reg [31:0] lo_in = 32'h0000000F;
+register hi(clear, clock, hii, hi_in, busi_hi);
+register lo(clear, clock, loi, lo_in, busi_lo);
 
 // alu registers
 register ry(clear, clock, ryi, buso, alua);
@@ -105,8 +106,8 @@ register inport(clear, clock, ipi, input_unit, busi_ip);
 reg [31:0] r0_in = 32'b0;
 register r0(clear, clock, baout, r0_in, busi_r0);
 
-reg [31:0] r2_in = 32'h00000002;
-reg [31:0] r3_in = 32'h0F0F0F0F;
+//reg [31:0] r2_in = 32'h00000002;
+//reg [31:0] r3_in = 32'h0F0F0F0F;
 
 register r1(clear, clock, R_IN[1], buso, busi_r1);
 register r2(clear, clock, R_IN[2], r2_in, busi_r2);

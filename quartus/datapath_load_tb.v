@@ -171,19 +171,18 @@ module datapath_load_tb();
 		// read memory and load into mdr
 		mem_read <= 1; mem_write <= 0;
 		#10 mdri <= 1;
-		#10 mdri <= 0;
+		#10 mdri <= 0; mem_read <= 0;
 		
 	end
 	Reg_load3b: begin
-		#10 mem_read <= 0;
-		
-		
+		#10 mdro <= 1; gra <= 1; rin <= 1;
+		#10 mdro <= 0; gra <= 0; rin <= 0;
+
 
 	end
 	T0: begin // see if you need to de-assert these signals
 		// output mdr onto bus and load contents into desired register from ir
-		#10 mdro <= 1; gra <= 1; rin <= 1;
-		#10 mdro <= 0; gra <= 0; rin <= 0;
+
 		
 	end
 	T1: begin
@@ -194,13 +193,10 @@ module datapath_load_tb();
 	end
 	T2: begin
 		// MDRout <= 1; IRin <= 1;
-		
-		
-		
+			
 	end
 	T3: begin
 		// R2out <= 1; Yin <= 1;
-		
 		
 	end
 	T4: begin

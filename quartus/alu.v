@@ -59,6 +59,7 @@ module alu (
 		// output operation output based on op_select
 		case(op_select)
 			5'b00011: out [31:0] = add_out;
+			5'b01100: out [31:0] = add_out;
 			5'b00100: out[31:0] = sub_out;
 			5'b00101: out[31:0] = shr_out;
 			5'b00110: out[31:0] = shra_out;
@@ -66,7 +67,9 @@ module alu (
 			5'b01000: out[31:0] = ror_out;
 			5'b01001: out[31:0] = rol_out;
 			5'b01010: out[31:0] = and_out;
+			5'b01101: out[31:0] = and_out;
 			5'b01011: out[31:0] = or_out;
+			5'b01110: out[31:0] = or_out;
 			5'b01111: out[63:0] = mul_out;
 			5'b10000: begin
 				out[31:0] = quo_out;

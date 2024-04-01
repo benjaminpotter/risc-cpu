@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 //`include "datapath.v"
 
-module datapath_addi_tb();
+module datapath_mflo_tb();
 	reg clock, clear;
 
 	// control register signals
@@ -54,7 +54,7 @@ module datapath_addi_tb();
 		.pc(pc),
 		.pc_immediate(pc_immediate),
 
-		.ir(ir), 
+		.ir(ir),
 
 		.mari(mari), .maro(maro),
 		.mdri(mdri), .mdro(mdro),
@@ -69,9 +69,9 @@ module datapath_addi_tb();
 		.ryi(ryi),
 		.ryo(ryo),
 		
-		.rzhi(rzhi), .rzli(rzli), .rzho(rzho), .rzlo(rzlo), .rzo(rzo),
-		
 		.csigno(csigno),
+		
+		.rzhi(rzhi), .rzli(rzli), .rzho(rzho), .rzlo(rzlo), .rzo(rzo),
 		
 		.gra(gra),
 		.grb(grb),
@@ -161,7 +161,7 @@ module datapath_addi_tb();
 
 	end
 	Reg_load1a: begin		
-		// load address 0 into mar for addi instruction
+		// load address 0 into mar for first instruction
 		#10 baout <= 1; mari <= 1;
 		#10 baout <= 0; mari <= 0;	
 
@@ -180,45 +180,43 @@ module datapath_addi_tb();
 
 	end
 	Reg_load2b: begin
-		//load hardcoded value into rb
-		#10 grb <= 1; rin <= 1; 
-		#10 grb <= 0; rin <= 0; 
+		//put value into hi
+		#10 loi <= 1;
+		#10 loi <= 0;
 				
 	end
 	Reg_load3a: begin
-		// put rb value on bus and capture in ry
-		#10 grb <= 1; rout <= 1; ryi <= 1;
-		#10 grb <= 0; rout <= 0; ryi <= 0; 
+		// move hi into ra 
+		#10 loo <= 1; gra <= 1; rin <= 1;
+		#10 loo <= 0; gra <= 0; rin <= 0; 
 		
 	end
-	Reg_load3b: begin	
-		// put s sign extended on bus and capture in rz lo
-		#10 csigno <= 1; rzli <= 1;
-		#10 csigno <= 0; rzli <= 0;
+	Reg_load3b: begin
 
 	end
-	T0: begin 		
-		// put rz lo value on bus and capture in ra
-		#10 rzlo <= 1; rin <= 1; gra = 1;
-		#10 rzlo <= 0; rin <= 0; gra = 0;
+	T0: begin // see if you need to de-assert these signals
+		// output mdr onto bus and load contents into desired register from ir
 		
 	end
 	T1: begin
+		// Zlowout <= 1; PCin <= 1; Read <= 1; MDRin <= 1;
+		// Mdatain <= 32'h28918000; // opcode for “and R1, R2, R3”
 		
 		
 	end
-	T2: begin	
-		
-		
+	T2: begin
+		// MDRout <= 1; IRin <= 1;
+			
 	end
 	T3: begin
-	
+		// R2out <= 1; Yin <= 1;
 		
 	end
 	T4: begin
-	
+		// R3out <= 1; AND <= 1; Zin <= 1;
 	end
 	T5: begin
+		// Zlowout <= 1; R1in <= 1;
 
 	end
 	endcase

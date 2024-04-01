@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 //`include "datapath.v"
 
-module datapath_addi_tb();
+module datapath_store_index();
 	reg clock, clear;
 
 	// control register signals
@@ -14,15 +14,15 @@ module datapath_addi_tb();
 	reg mari, maro;
 	reg mdri, mdro;
 	reg mem_read, mem_write;
-	
+
 	reg opi, ipi, ipo;
 	reg [31:0] input_unit;
-	
+
 	reg hii, hio, loi, loo;
 
 	reg ryi, ryo;
 	reg rzhi, rzli, rzho, rzlo, rzo;
-	
+
 	reg csigno;
 	reg gra, grb, grc, rin, rout, baout;
 
@@ -54,25 +54,25 @@ module datapath_addi_tb();
 		.pc(pc),
 		.pc_immediate(pc_immediate),
 
-		.ir(ir), 
+		.ir(ir),
 
 		.mari(mari), .maro(maro),
 		.mdri(mdri), .mdro(mdro),
-		
+
 		.opi(opi), .ipi(ipi), .ipo(ipo), .input_unit(input_unit), 
-		
+
 		.mem_read(mem_read),
 		.mem_write(mem_write),
-		
+
 		.hii(hii), .hio(hio), .loi(loi), .loo(loo),
-		
+
 		.ryi(ryi),
 		.ryo(ryo),
-		
-		.rzhi(rzhi), .rzli(rzli), .rzho(rzho), .rzlo(rzlo), .rzo(rzo),
-		
+
 		.csigno(csigno),
-		
+
+		.rzhi(rzhi), .rzli(rzli), .rzho(rzho), .rzlo(rzlo), .rzo(rzo),
+
 		.gra(gra),
 		.grb(grb),
 		.grc(grc),
@@ -113,7 +113,7 @@ module datapath_addi_tb();
 	Default: begin
 		pci <= 0;
 		pco <= 0;
-		
+
 		iri <= 0;
 		iro <= 0;
 
@@ -122,7 +122,7 @@ module datapath_addi_tb();
 
 		maro <= 0;
 		mdro <= 0;
-		
+
 		opi <= 0;
 		ipi <= 0;
 		ipo <= 0;
@@ -135,7 +135,7 @@ module datapath_addi_tb();
 
 		mem_read <= 0;
 		mem_write <= 0;
-		
+
 		hii <= 0;
 		hio <= 0;
 	   loi <= 0;
@@ -143,15 +143,15 @@ module datapath_addi_tb();
 
 		ryi <= 0;
 		ryo <= 0;
-		
+
 		rzhi <= 0;
 	   rzli <= 0;
 		rzho <= 0;
 	   rzlo <= 0;
 		rzo <= 0;
-		
+
 		csigno <= 0;
-		
+
 		gra <= 0;
 		grb <= 0;
 		grc <= 0;
@@ -164,62 +164,57 @@ module datapath_addi_tb();
 		// load address 0 into mar for addi instruction
 		#10 baout <= 1; mari <= 1;
 		#10 baout <= 0; mari <= 0;	
-
 	end
 	Reg_load1b: begin
 		// read instruction from memory into data register
 		mem_read <= 1; mem_write <= 0;
 		#10 mdri <= 1;
 		#10 mdri <= 0; mem_read <= 0;
-
 	end
 	Reg_load2a: begin
 		// load instruction from data register into ir
 		#10 mdro <= 1; iri <= 1;
 		#10 mdro <= 0; iri <= 0;
-
 	end
 	Reg_load2b: begin
-		//load hardcoded value into rb
+		//load in RB
 		#10 grb <= 1; rin <= 1; 
 		#10 grb <= 0; rin <= 0; 
-				
 	end
 	Reg_load3a: begin
-		// put rb value on bus and capture in ry
-		#10 grb <= 1; rout <= 1; ryi <= 1;
-		#10 grb <= 0; rout <= 0; ryi <= 0; 
-		
+		// load in ra
+		#10 gra <= 1; rin <= 1; 
+		#10 gra <= 0; rin <= 0;
 	end
 	Reg_load3b: begin	
-		// put s sign extended on bus and capture in rz lo
+	   // move RB to RY
+		#10 grb <= 1; rout <= 1; ryi <= 1;
+		#10 grb <= 0; rout <= 0; ryi <= 0; 
+	end
+	T0: begin 
+		//move C sign extended immediate to bus and catch addition in rz
 		#10 csigno <= 1; rzli <= 1;
 		#10 csigno <= 0; rzli <= 0;
-
-	end
-	T0: begin 		
-		// put rz lo value on bus and capture in ra
-		#10 rzlo <= 1; rin <= 1; gra = 1;
-		#10 rzlo <= 0; rin <= 0; gra = 0;
-		
 	end
 	T1: begin
-		
-		
+	   // move rz lo reg value to mar
+		#10 rzlo <= 1; mari <= 1;
+		#10 rzlo <= 0; mari <= 0;
 	end
-	T2: begin	
-		
-		
+	T2: begin
+		// output value of ra onto bus
+		#10 gra <= 1; rout <= 1; mem_read <= 0; mdri <= 1;
+		#10 gra <= 0; rout <= 0; mdri <= 0;
 	end
 	T3: begin
-	
-		
+		// write value of mdr into ram
+		mem_write <= 1;
 	end
 	T4: begin
-	
+      // deassert write signal
+		#10 mem_write <= 0;
 	end
 	T5: begin
-
 	end
 	endcase
 	end
