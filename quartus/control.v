@@ -6,7 +6,9 @@ module control(
 
     // control signals required
     output reg pci, pco,
+	 output reg iri, iro,
     output reg mari, maro,
+	 output reg mdri, mdro,
 	 output reg mem_read, mem_write,
 	 output reg opi, ipi, ipo,
 	 output reg hii, hio, loi, loo,
@@ -16,20 +18,76 @@ module control(
 	 output reg csigno
 );
 
-    parameter   reset_state = 4'b0000,
-                fetch0_state = 4'b0001,
-					 fetch1_state = 4'b0010,
-					 fetch2_state = 4'b0011; // ESES not going to add mine yet
+    parameter   reset_state = 8'b00000000,
+                fetch0 = 8'b00000001,
+					 fetch1 = 8'b00000010,
+					 fetch2 = 8'b00000011,
+
+					 shr3 = 8'b00000100,
+					 shr4 = 8'b00000101,
+					 shr5 = 8'b00000110,
+					 shr6 = 8'b00000111,
+					 shr7 = 8'b00001000,
+					 
+					 shl3 = 8'b00001001,
+					 shl4 = 8'b00001010,
+					 shl5 = 8'b00001011,
+					 shl6 = 8'b00001100,
+					 shl7 = 8'b00001101,
+					 
+					 shra3 = 8'b00001110,
+					 shra4 = 8'b00001111,
+					 shra5 = 8'b00010000,
+					 shra6 = 8'b00010001,
+					 shra7 = 8'b00010010,
+					 
+					 and3 = 8'b000010011,
+					 and4 = 8'b000010100,
+					 and5 = 8'b000010101,
+					 and6 = 8'b000010110,
+					 and7 = 8'b000010111,
+					 
+					 or3 = 8'b00011000,
+					 or4 = 8'b00011001,
+					 or5 = 8'b00011010,
+					 or6 = 8'b00011011,
+					 or7 = 8'b00011100,
+					 
+					 ror3 = 8'b00011101,
+					 ror4 = 8'b00011110,
+					 ror5 = 8'b00011111,
+					 ror6 = 8'b00100000,
+					 ror7 = 8'b00100001,
+					 
+					 rol3 = 8'b00100010,
+					 rol4 = 8'b00100011,
+					 rol5 = 8'b00100100,
+					 rol6 = 8'b00100101,
+					 rol7 = 8'b00100110,
+					 
+					 mul3 = 8'b00100111,
+					 mul4 = 8'b00101000,
+					 mul5 = 8'b00101001,
+					 mul6 = 8'b00101010,
+					 mul7 = 8'b00101011,
+					 mul8 = 8'b00101100,
+					 
+					 div3 = 8'b00101101,
+					 div4 = 8'b00101110,
+					 div5 = 8'b00101111,
+					 div6 = 8'b00110000,
+					 div7 = 8'b00110001,
+					 div8 = 8'b00110010; // ESES not going to add mine yet
     
     reg [3:0] current_state = reset_state;
 
     always @(posedge clock, reset) begin
         if(reset == 1'b1) current_state = reset_state;
         else case (current_state)
-            reset_state:    current_state  = fetch0_state;
-            fetch0_state:   current_state  = fetch1_state;
-				fetch1_state:	 current_state = fetch2_state;
-				fetch2_state:   begin
+            reset_state:    current_state  = fetch0;
+            fetch0:   current_state  = fetch1;
+				fetch1:	 current_state = fetch2;
+				fetch2:   begin
 			                       case(ir[31:27])
 										      5'b00101: current_state = shr3;
 												5'b00110: current_state = shra3;
@@ -85,7 +143,7 @@ module control(
 				div6:           current_state = div7;
 				div7:           current_state = div8;
 				div8:           current_state = fetch0;
-        end case
+        endcase
     end    
 
     always @(current_state) begin
@@ -93,31 +151,31 @@ module control(
             reset_state: begin
                 #10 pco <= 0; mari <= 0;
             end 
-            fetch0_state: begin
+            fetch0: begin
                 #10 pco <= 1; mari <= 1;
                 #10 pco <= 0; mari <= 0;
             end
-				fetch1_state: begin
+				fetch1: begin
 				    #10 mem_read <= 1; mdri <= 1;
 					 #10 mem_read <= 0; mdri <= 0;
 				end
-				fetch2_state: begin
+				fetch2: begin
 				    #10 mdro <= 1; iri <= 1;
 					 #10 mdro <= 0; iri <= 0;
 				end
 //---------------- BRANCH ----------------------------------------
-            br3: begin
-                #10 gra <= 1; rout <= 1; con_in <= 1;
-                #10 gra <= 0; rout <= 0; con_in <= 0;
-            end
-            br4: begin
-                #10 pco <= 1; ryi <= 1;
-                #10 pco <= 0; ryi <= 0;
-            end
-            br5: begin
-                #10 csigno <= 1; op_select <= 5'b00011; rzi <= 1;
-                #10 csigno <= 0; op_select <= 5'b00011; rzi <= 0;
-            end
+//            br3: begin
+//                #10 gra <= 1; rout <= 1; con_in <= 1;
+//                #10 gra <= 0; rout <= 0; con_in <= 0;
+//            end
+//            br4: begin
+//                #10 pco <= 1; ryi <= 1;
+//                #10 pco <= 0; ryi <= 0;
+//            end
+//            br5: begin
+//                #10 csigno <= 1; op_select <= 5'b00011; rzi <= 1;
+//                #10 csigno <= 0; op_select <= 5'b00011; rzi <= 0;
+//            end
 //---------------- AND, OR, SHR, SHL, SHRA, ROR, ROL --------------
 				and3, or3, shr3, shl3, shra3, ror3, rol3: begin
 				    #10 grc <= 1; rin <= 1;
@@ -153,8 +211,8 @@ module control(
 				    #10 gra <= 0; rout <= 0; ryi <= 0;
 				end
 				div6, mul6: begin
-				    #10 grb <= 1; rout <= 1; rzli <= 1, rzhi <= 1; // ESES does this work??
-				    #10 grb <= 0; rout <= 0; rzli <= 0, rzhi <= 0;
+				    #10 grb <= 1; rout <= 1; rzli <= 1; rzhi <= 1; // ESES does this work??
+				    #10 grb <= 0; rout <= 0; rzli <= 0; rzhi <= 0;
 				end
 				div7, mul7: begin
 				    #10 rzlo <= 1; loi <= 1;
@@ -165,77 +223,77 @@ module control(
 					 #10 rzho <= 0; hii <= 0;
 				end
 //-------------------- LOAD ----------------------------------------
-				ld3: begin
-				    #10 csigno <= 1; mari <= 1;
-				    #10 csigno <= 0; mari <= 0;
-				end
-				ld4: begin
-				    #10 mem_read <= 1; mdri <= 1;
-		          #10 mem_read <= 0; mdri <= 0;
-				end
-				ld5: begin
-				    #10 mdro <= 1; gra <= 1; rin <= 1;
-		          #10 mdro <= 0; gra <= 0; rin <= 0;
-				end
-//-------------------- LOAD IMM-------------------------------------
-				ldi3: begin
-				    #10 mdri <= 1; csigno <= 1;
-				    #10 mdri <= 0; csigno <= 0;
-				end
-				ldi4: begin
-				    #10 mdro <= 1; gra <= 1; rin <= 1;
-				    #10 mdro <= 0; gra <= 0; rin <= 0;
-				end
-//-------------------- STORE ---------------------------------------
-				st3: begin
-				    #10 gra <= 1; rin <= 1;
-				    #10 gra <= 0; rin <= 0;
-				end
-				st4: begin
-				    #10 gra <= 1; rout <= 1;
-				    #10 gra <= 0; rout <= 0;
-				end
-				st5: begin
-				    #10 mem_read <= 0; mdri <= 1;
-				    #10 mdri <= 0;
-				end
-				st6: begin
-				    #10 csigno <= 1; mari <= 1;
-				    #10 csigno <= 0; mari <= 0;
-				end
-				st7: begin
-				    #10 mem_write <= 1;
-					 #10 mem_write <= 0;
-				end
-//-------------------- STORE INDEX ---------------------------------------
-				stind3: begin
-				    #10 grb <= 1; rin <= 1; 
-				    #10 grb <= 0; rin <= 0;
-				end
-				stind4: begin
-				    #10 gra <= 1; rin <= 1; 
-				    #10 gra <= 0; rin <= 0;
-				end
-				stind5: begin
-				    #10 grb <= 1; rout <= 1; ryi <= 1;
-				    #10 grb <= 0; rout <= 0; ryi <= 0;
-				end
-				stind6: begin
-				    #10 csigno <= 1; rzli <= 1;
-				    #10 csigno <= 0; rzli <= 0;
-				end
-				stind7: begin
-				    #10 rzlo <= 1; mari <= 1;
-				    #10 rzlo <= 0; mari <= 0;
-				end
-				stind8: begin
-				    #10 gra <= 1; rout <= 1; mem_read <= 0; mdri <= 1;
-				    #10 gra <= 0; rout <= 0; mdri <= 0;
-				end
-				stind9: begin
-				    #10 mem_write <= 1;
-					 #10 mem_write <= 0;
-				end
+//				ld3: begin
+//				    #10 csigno <= 1; mari <= 1;
+//				    #10 csigno <= 0; mari <= 0;
+//				end
+//				ld4: begin
+//				    #10 mem_read <= 1; mdri <= 1;
+//		          #10 mem_read <= 0; mdri <= 0;
+//				end
+//				ld5: begin
+//				    #10 mdro <= 1; gra <= 1; rin <= 1;
+//		          #10 mdro <= 0; gra <= 0; rin <= 0;
+//				end
+////-------------------- LOAD IMM-------------------------------------
+//				ldi3: begin
+//				    #10 mdri <= 1; csigno <= 1;
+//				    #10 mdri <= 0; csigno <= 0;
+//				end
+//				ldi4: begin
+//				    #10 mdro <= 1; gra <= 1; rin <= 1;
+//				    #10 mdro <= 0; gra <= 0; rin <= 0;
+//				end
+////-------------------- STORE ---------------------------------------
+//				st3: begin
+//				    #10 gra <= 1; rin <= 1;
+//				    #10 gra <= 0; rin <= 0;
+//				end
+//				st4: begin
+//				    #10 gra <= 1; rout <= 1;
+//				    #10 gra <= 0; rout <= 0;
+//				end
+//				st5: begin
+//				    #10 mem_read <= 0; mdri <= 1;
+//				    #10 mdri <= 0;
+//				end
+//				st6: begin
+//				    #10 csigno <= 1; mari <= 1;
+//				    #10 csigno <= 0; mari <= 0;
+//				end
+//				st7: begin
+//				    #10 mem_write <= 1;
+//					 #10 mem_write <= 0;
+//				end
+////-------------------- STORE INDEX ---------------------------------------
+//				stind3: begin
+//				    #10 grb <= 1; rin <= 1; 
+//				    #10 grb <= 0; rin <= 0;
+//				end
+//				stind4: begin
+//				    #10 gra <= 1; rin <= 1; 
+//				    #10 gra <= 0; rin <= 0;
+//				end
+//				stind5: begin
+//				    #10 grb <= 1; rout <= 1; ryi <= 1;
+//				    #10 grb <= 0; rout <= 0; ryi <= 0;
+//				end
+//				stind6: begin
+//				    #10 csigno <= 1; rzli <= 1;
+//				    #10 csigno <= 0; rzli <= 0;
+//				end
+//				stind7: begin
+//				    #10 rzlo <= 1; mari <= 1;
+//				    #10 rzlo <= 0; mari <= 0;
+//				end
+//				stind8: begin
+//				    #10 gra <= 1; rout <= 1; mem_read <= 0; mdri <= 1;
+//				    #10 gra <= 0; rout <= 0; mdri <= 0;
+//				end
+//				stind9: begin
+//				    #10 mem_write <= 1;
+//					 #10 mem_write <= 0;
+//				end
         endcase
     end
 
