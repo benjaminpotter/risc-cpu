@@ -42,49 +42,49 @@ module control(
 												5'b10000: current_state = div3;
 										  endcase
 								    end
-				shr3:           current_state: shr4;
-				shr4:           current_state: shr5;
-				shr5:           current_state: shr6;
-				shr6:           current_state: shr7;
-				shr7:           current_state: fetch0;
+				shr3:           current_state = shr4;
+				shr4:           current_state = shr5;
+				shr5:           current_state = shr6;
+				shr6:           current_state = shr7;
+				shr7:           current_state = fetch0;
 				
-				shl3:           current_state: shl4;
-				shl4:           current_state: shl5;
-				shl5:           current_state: shl6;
-				shl6:           current_state: shl7;
-				shl7:           current_state: fetch0;
+				shl3:           current_state = shl4;
+				shl4:           current_state = shl5;
+				shl5:           current_state = shl6;
+				shl6:           current_state = shl7;
+				shl7:           current_state = fetch0;
 				
-				shra3:          current_state: shra4;
-				shra4:          current_state: shra5;
-				shra5:          current_state: shra6;
-				shra6:          current_state: shra7;
-				shra7:          current_state: fetch0;
+				shra3:          current_state = shra4;
+				shra4:          current_state = shra5;
+				shra5:          current_state = shra6;
+				shra6:          current_state = shra7;
+				shra7:          current_state=  fetch0;
 				
-				ror3:           current_state: ror4;
-				ror4:           current_state: ror5;
-				ror5:           current_state: ror6;
-				ror6:           current_state: ror7;
-				ror7:           current_state: fetch0;
+				ror3:           current_state = ror4;
+				ror4:           current_state = ror5;
+				ror5:           current_state = ror6;
+				ror6:           current_state = ror7;
+				ror7:           current_state = fetch0;
 				
-				rol3:           current_state: rol4;
-				rol4:           current_state: rol5;
-				rol5:           current_state: rol6;
-				rol6:           current_state: rol7;
-				rol7:           current_state: fetch0;
+				rol3:           current_state = rol4;
+				rol4:           current_state = rol5;
+				rol5:           current_state = rol6;
+				rol6:           current_state = rol7;
+				rol7:           current_state = fetch0;
 				
-				mul3:           current_state: mul4;
-				mul4:           current_state: mul5;
-				mul5:           current_state: mul6;
-				mul6:           current_state: mul7;
-				mul7:           current_state: mul8;
-				mul8:           current_state: fetch0;
+				mul3:           current_state = mul4;
+				mul4:           current_state = mul5;
+				mul5:           current_state = mul6;
+				mul6:           current_state = mul7;
+				mul7:           current_state = mul8;
+				mul8:           current_state = fetch0;
 				
-				div3:           current_state: div4;
-				div4:           current_state: div5;
-				div5:           current_state: div6;
-				div6:           current_state: div7;
-				div7:           current_state: div8;
-				div8:           current_state: fetch0;
+				div3:           current_state = div4;
+				div4:           current_state = div5;
+				div5:           current_state = div6;
+				div6:           current_state = div7;
+				div7:           current_state = div8;
+				div8:           current_state = fetch0;
         end case
     end    
 
