@@ -48,6 +48,7 @@ wire [31:0] busi_rz_hi, busi_rz_lo;
 wire [31:0] busi_r0, busi_r1, busi_r2, busi_r3, busi_r4, busi_r5, busi_r6, busi_r7, busi_r8, busi_r9, busi_r10, busi_r11, busi_r12, busi_r13, busi_r14, busi_r15;
 wire [31:0] busi_ip;
 wire [31:0] busi_c_sign;
+wire con_in, con;
 wire [15:0] R_IN, R_OUT;
 
 wire [31:0] buso;
@@ -62,7 +63,7 @@ wire [31:0] ram_data_out;
 wire [31:0] md_mux_out;
 
 // control registers
-register rpc(clear, clock, pci, pc_immediate, busi_pc);
+register rpc(clear, clock, pci, buso, busi_pc);
 register rir(clear, clock, iri, buso, busi_ir);
 
 // memory registers
@@ -181,6 +182,23 @@ bus b(
 	.csigno(csigno),
 	
 	.buso(buso)
+);
+
+conff con_logic(
+    .clock(clock),
+    .bus(buso),
+    .ir(iro),
+    .con_in(con_in),
+    .con(con)
+);
+
+control control_logic(
+    .clock(clock),
+    .reset(clear),
+    .ir(iro),
+
+    .pci(pci), .pco(pco),
+    .mari(mari), .maro(maro)
 );
 
 assign op_select = busi_ir[31:27];

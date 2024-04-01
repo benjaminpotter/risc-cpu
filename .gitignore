@@ -22,6 +22,13 @@
 # or you create an own submodule in the folder to keep binary files out of your
 # design.
 
+*.swp
+*.fst
+**/results.xml
+**/sim_build/**
+**/__pycache__/**
+**/iverilog_dump.v
+
 # Need to keep all HDL files
 # *.vhd
 # *.v
