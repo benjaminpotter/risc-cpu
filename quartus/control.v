@@ -12,6 +12,7 @@ module control(
 	 output reg hii, hio, loi, loo,
 	 output reg ryi, ryo,
 	 output reg rzhi, rzli, rzho, rzlo, rzo,
+	 output reg gra, grb, grc, rin, rout, baout,
 	 output reg csigno
 );
 
@@ -84,6 +85,7 @@ module control(
 				div6:           current_state: div7;
 				div7:           current_state: div8;
 				div8:           current_state: fetch0;
+        end case
     end    
 
     always @(current_state) begin
@@ -103,6 +105,19 @@ module control(
 				    #10 mdro <= 1; iri <= 1;
 					 #10 mdro <= 0; iri <= 0;
 				end
+//---------------- BRANCH ----------------------------------------
+            br3: begin
+                #10 gra <= 1; rout <= 1; con_in <= 1;
+                #10 gra <= 0; rout <= 0; con_in <= 0;
+            end
+            br4: begin
+                #10 pco <= 1; ryi <= 1;
+                #10 pco <= 0; ryi <= 0;
+            end
+            br5: begin
+                #10 csigno <= 1; op_select <= 5'b00011; rzi <= 1;
+                #10 csigno <= 0; op_select <= 5'b00011; rzi <= 0;
+            end
 //---------------- AND, OR, SHR, SHL, SHRA, ROR, ROL --------------
 				and3, or3, shr3, shl3, shra3, ror3, rol3: begin
 				    #10 grc <= 1; rin <= 1;
