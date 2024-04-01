@@ -176,8 +176,6 @@ module datapath_load_tb();
 	end
 	Reg_load3b: begin
 		#10 mem_read <= 0;
-		
-		
 
 	end
 	T0: begin // see if you need to de-assert these signals
@@ -194,13 +192,10 @@ module datapath_load_tb();
 	end
 	T2: begin
 		// MDRout <= 1; IRin <= 1;
-		
-		
-		
+			
 	end
 	T3: begin
 		// R2out <= 1; Yin <= 1;
-		
 		
 	end
 	T4: begin

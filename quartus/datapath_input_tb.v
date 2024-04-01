@@ -180,30 +180,17 @@ module datapath_input_tb();
 	Reg_load3b: begin
 
 	end
-	T0: begin // see if you need to de-assert these signals
-		// output mdr onto bus and load contents into desired register from ir
-		
+	T0: begin 
 	end
 	T1: begin
-		// Zlowout <= 1; PCin <= 1; Read <= 1; MDRin <= 1;
-		// Mdatain <= 32'h28918000; // opcode for “and R1, R2, R3”
-		
-		
 	end
 	T2: begin
-		// MDRout <= 1; IRin <= 1;
-			
 	end
-	T3: begin
-		// R2out <= 1; Yin <= 1;
-		
+	T3: begin		
 	end
 	T4: begin
-		// R3out <= 1; AND <= 1; Zin <= 1;
 	end
 	T5: begin
-		// Zlowout <= 1; R1in <= 1;
-
 	end
 	endcase
 	end

@@ -180,44 +180,30 @@ module datapath_mfhi_tb();
 
 	end
 	Reg_load2b: begin
-		//put value into hi
+		//put hardcoded value into hi reg
 		#10 hii <= 1;
 		#10 hii <= 0;
 				
 	end
 	Reg_load3a: begin
-		// move hi into ra 
+		// put hi reg value on bus to be captured into ra
 		#10 hio <= 1; gra <= 1; rin <= 1;
 		#10 hio <= 0; gra <= 0; rin <= 0; 
 		
 	end
 	Reg_load3b: begin
-
 	end
-	T0: begin // see if you need to de-assert these signals
-		// output mdr onto bus and load contents into desired register from ir
-		
+	T0: begin 
 	end
 	T1: begin
-		// Zlowout <= 1; PCin <= 1; Read <= 1; MDRin <= 1;
-		// Mdatain <= 32'h28918000; // opcode for “and R1, R2, R3”
-		
-		
 	end
-	T2: begin
-		// MDRout <= 1; IRin <= 1;
-			
+	T2: begin		
 	end
 	T3: begin
-		// R2out <= 1; Yin <= 1;
-		
 	end
 	T4: begin
-		// R3out <= 1; AND <= 1; Zin <= 1;
 	end
 	T5: begin
-		// Zlowout <= 1; R1in <= 1;
-
 	end
 	endcase
 	end

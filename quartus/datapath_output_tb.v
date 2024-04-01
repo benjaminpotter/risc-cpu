@@ -164,7 +164,7 @@ module datapath_output_tb();
 
 	end
 	Reg_load2b: begin
-		//load reg ra on bus and capture in outport r
+		//put hardcoded value into ra
 		#10 gra <= 1; rin <= 1;
 		#10 gra <= 0; rin <= 0;
 				
@@ -177,32 +177,18 @@ module datapath_output_tb();
 		
 	end
 	Reg_load3b: begin
-
 	end
-	T0: begin // see if you need to de-assert these signals
-		// output mdr onto bus and load contents into desired register from ir
-		
+	T0: begin 
 	end
 	T1: begin
-		// Zlowout <= 1; PCin <= 1; Read <= 1; MDRin <= 1;
-		// Mdatain <= 32'h28918000; // opcode for “and R1, R2, R3”
-		
-		
 	end
-	T2: begin
-		// MDRout <= 1; IRin <= 1;
-			
+	T2: begin	
 	end
 	T3: begin
-		// R2out <= 1; Yin <= 1;
-		
 	end
 	T4: begin
-		// R3out <= 1; AND <= 1; Zin <= 1;
 	end
 	T5: begin
-		// Zlowout <= 1; R1in <= 1;
-
 	end
 	endcase
 	end

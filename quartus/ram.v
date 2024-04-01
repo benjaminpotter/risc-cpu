@@ -16,7 +16,7 @@ module ram(
 	reg [31:0] memory [0:511];
 	
 	initial begin
-		$readmemh("C:/Users/solob/intelFPGA_lite/18.1/elec374/risc-cpu/quartus/mem.txt", memory);
+		$readmemh("C:/Users/sagef/Documents/Engineering/ELEC 374/RISC-CPU/quartus/mem.txt", memory);
 	end
 	
 	always@(posedge clock) begin
