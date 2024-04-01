@@ -89,7 +89,7 @@ module control(
     
     reg [3:0] current_state = reset_state;
 
-    always @(posedge clock, reset) begin
+    always @(posedge clock, posedge reset) begin
         if(reset == 1'b1) current_state = reset_state;
         else case (current_state)
             reset_state:    current_state  = fetch0;
@@ -175,7 +175,45 @@ module control(
     always @(current_state) begin
         case(current_state)
             reset_state: begin
-                #10 pco <= 0; mari <= 0;
+                pco <= 0;
+					 iri <= 0;
+		          iro <= 0;
+
+		          mari <= 0;
+		          mdri <= 0;
+
+		          maro <= 0;
+		          mdro <= 0;
+		
+		          opi <= 0;
+		          ipi <= 0;
+		          ipo <= 0;
+
+		          mem_read <= 0;
+		          mem_write <= 0;
+		
+		          hii <= 0;
+		          hio <= 0;
+	             loi <= 0;
+		          loo <= 0;
+
+		          ryi <= 0;
+		          ryo <= 0;
+		
+		          rzhi <= 0;
+	             rzli <= 0;
+		          rzho <= 0;
+	             rzlo <= 0;
+		          rzo <= 0;
+		
+		          csigno <= 0;
+		
+		          gra <= 0;
+		          grb <= 0;
+		          grc <= 0;
+		          rin <= 0;
+		          rout <= 0;
+		          baout <= 0;
             end 
             fetch0: begin
                 #10 pco <= 1; mari <= 1;
