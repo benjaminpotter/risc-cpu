@@ -77,7 +77,15 @@ module control(
 					 div5 = 8'b00101111,
 					 div6 = 8'b00110000,
 					 div7 = 8'b00110001,
-					 div8 = 8'b00110010; // ESES not going to add mine yet
+					 div8 = 8'b00110010,
+					
+					 ld3 = 8'b00110011,
+					 ld4 = 8'b00110100,
+					 ld5 = 8'b00110101,
+					 
+					 ldi3 = 8'b00110110,
+					 ldi4 = 8'b00110111;
+					 // ESES not going to add mine yet
     
     reg [3:0] current_state = reset_state;
 
@@ -98,6 +106,10 @@ module control(
 												5'b01011: current_state = or3;
 												5'b01111: current_state = mul3;
 												5'b10000: current_state = div3;
+												//5'b01100: current_state = addi3;
+												5'b00000: current_state = ld3;
+												5'b00001: current_state= ldi3;
+
 										  endcase
 								    end
 				shr3:           current_state = shr4;
@@ -143,6 +155,20 @@ module control(
 				div6:           current_state = div7;
 				div7:           current_state = div8;
 				div8:           current_state = fetch0;
+				
+				//addi3:           current_state = addi4;
+				//addi4:           current_state = addi5;
+				//addi5:           current_state = addi6;
+				//addi6:           current_state = fetch0;
+				
+				ld3:           current_state = ld4;
+				ld4:           current_state = ld5;
+				ld5:           current_state = fetch0;
+				
+				ldi3:           current_state = ldi4;
+				ldi4:           current_state = fetch0;
+				
+
         endcase
     end    
 
@@ -223,27 +249,27 @@ module control(
 					 #10 rzho <= 0; hii <= 0;
 				end
 //-------------------- LOAD ----------------------------------------
-//				ld3: begin
-//				    #10 csigno <= 1; mari <= 1;
-//				    #10 csigno <= 0; mari <= 0;
-//				end
-//				ld4: begin
-//				    #10 mem_read <= 1; mdri <= 1;
-//		          #10 mem_read <= 0; mdri <= 0;
-//				end
-//				ld5: begin
-//				    #10 mdro <= 1; gra <= 1; rin <= 1;
-//		          #10 mdro <= 0; gra <= 0; rin <= 0;
-//				end
+				ld3: begin
+				    #10 csigno <= 1; mari <= 1;
+				    #10 csigno <= 0; mari <= 0;
+				end
+				ld4: begin
+				    #10 mem_read <= 1; mdri <= 1;
+		          #10 mem_read <= 0; mdri <= 0;
+				end
+				ld5: begin
+				    #10 mdro <= 1; gra <= 1; rin <= 1;
+		          #10 mdro <= 0; gra <= 0; rin <= 0;
+				end
 ////-------------------- LOAD IMM-------------------------------------
-//				ldi3: begin
-//				    #10 mdri <= 1; csigno <= 1;
-//				    #10 mdri <= 0; csigno <= 0;
-//				end
-//				ldi4: begin
-//				    #10 mdro <= 1; gra <= 1; rin <= 1;
-//				    #10 mdro <= 0; gra <= 0; rin <= 0;
-//				end
+				ldi3: begin
+				    #10 mdri <= 1; csigno <= 1;
+				    #10 mdri <= 0; csigno <= 0;
+				end
+				ldi4: begin
+				    #10 mdro <= 1; gra <= 1; rin <= 1;
+				    #10 mdro <= 0; gra <= 0; rin <= 0;
+				end
 ////-------------------- STORE ---------------------------------------
 //				st3: begin
 //				    #10 gra <= 1; rin <= 1;
@@ -294,6 +320,7 @@ module control(
 //				    #10 mem_write <= 1;
 //					 #10 mem_write <= 0;
 //				end
+				
         endcase
     end
 
