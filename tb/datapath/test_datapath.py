@@ -300,6 +300,10 @@ async def test_branch(dut):
 
 
 async def test_control(dut):
+    dut.clear.value = 1
+    await Timer(10, 'ns')
+    dut.clear.value = 0
+    
     await Timer(500, 'ns') 
 
 
@@ -308,7 +312,7 @@ async def run_test(dut):
     """ Test datapath.v """
 #    await reset_dut(dut)
 
-    clk = Clock(dut.clock, 10, 'ns')
+    clk = Clock(dut.clock, 20, 'ns')
     await cocotb.start(clk.start())
     
     for i in range(5):
