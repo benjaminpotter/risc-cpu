@@ -30,6 +30,20 @@ module control(
                 #10 pco <= 1; mari <= 1;
                 #10 pco <= 0; mari <= 0;
             end
+            
+            // branch
+            br3: begin
+                #10 gra <= 1; rout <= 1; con_in <= 1;
+                #10 gra <= 0; rout <= 0; con_in <= 0;
+            end
+            br4: begin
+                #10 pco <= 1; ryi <= 1;
+                #10 pco <= 0; ryi <= 0;
+            end
+            br5: begin
+                #10 csigno <= 1; op_select <= 5'b00011; rzi <= 1;
+                #10 csigno <= 0; op_select <= 5'b00011; rzi <= 0;
+            end
         endcase
     end
 
